@@ -1,0 +1,6 @@
+# File: .github/actions/secret-scanner/excluded_files.patterns
+# Lines starting with the char '#' are ignored
+\.pre-commit-config\.yaml
+\.github/actions/spelling/
+tests/unit/conftest\.py
+alembic/versions/

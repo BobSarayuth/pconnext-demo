@@ -1,0 +1,285 @@
+ID,Session,Intent,ActualQuery,ExpectAnswer,ActualAnswer,SimilarPhrase
+1,1,GREETING,สวัสดีค่ะ,,,
+2,2,GREETING,สอบถามหน่อยครับ,,,
+3,3,GREETING,Hi,,,
+4,4,"GENERAL INQUIRY (LOCATION, PHONE NUMBER)",รบกวนขอสอบถาม กระเบื้องหลังคา scg สาขาสุพรรณบุรีและกาญจนบุรีหน่อยค่ะ,,,
+5,5,"GENERAL INQUIRY (LOCATION, PHONE NUMBER)",มีสาขาแถวราชพฤกษ์ไหมคะ,,,
+6,6,"GENERAL INQUIRY (LOCATION, PHONE NUMBER)",SCG Digital นนทบุรี มีไหมครับ,,,
+7,7,"GENERAL INQUIRY (LOCATION, PHONE NUMBER)",https://scg.teemchat.net/_matrix/media/v1/download/scg.teemchat.net/zIRfhuHLcTwCQzPLZhSjWNXI,,,
+8,8,"GENERAL INQUIRY (LOCATION, PHONE NUMBER)",สนใจตัวนี้ ในจังหวัดชุมพร มีไหม,,,
+9,9,"GENERAL INQUIRY (LOCATION, PHONE NUMBER)",สาขาอุดรมีมั้ยคะ,,,
+10,10,"GENERAL INQUIRY (LOCATION, PHONE NUMBER)",ขอเบอร์สาขาCDC หน่อยค่ะหน่อยค่ะ,,,
+11,11,"GENERAL INQUIRY (LOCATION, PHONE NUMBER)",ขอเบอร์สาขาเชียงราย,,,
+12,12,"GENERAL INQUIRY (LOCATION, PHONE NUMBER)",ค่าบริการล้างแอร์ คิดยังไงคะ,,,
+13,13,"GENERAL INQUIRY (LOCATION, PHONE NUMBER)",ใช้ทีมงานคิวช่างไหมคะ,,,
+14,14,"GENERAL INQUIRY (LOCATION, PHONE NUMBER)",สอบถามเกี่ยวกับคิวช่างหน่อย,,,
+15,15,PRODUCT INQUIRY,สนใจรางน้ำฝน,,,
+16,16,PRODUCT INQUIRY,สนใจซ่อมหลังคารั่ว คิดค่าบริการเท่าไหร่,,,
+17,17,PRODUCT INQUIRY,ช่วยแนะนำสินค้าให้หน่อยได้ไหมครับ Pump GP400,,,
+18,18,PRODUCT INQUIRY,มีบานประตูupvc6ลูกฟัก ขนาด70cmx200cm. ขายไหมครับ,,,
+19,19,PRODUCT INQUIRY,"สนใจประตู UPVC ลูกฟัก 80x200 ซม.สำหรับใช้ในห้องน้ำ",,,
+20,20,PRODUCT INQUIRY,สนใจ  ชักโครก ครับ,,,
+21,21,PRODUCT INQUIRY,"ขนาด40*40 หนา 3.5
+ขนาด40*40 หนา 4",,,
+22,22,PRODUCT INQUIRY,สนใจแผ่นทางเท้าคับ,,,
+23,23,PRODUCT INQUIRY,ใช่คับ,,,
+24,24,PRODUCT INQUIRY,โซ่ระบายน้ำ สีน้ำตาลจะมีเติมสต็อกมั้ยคะ,,,
+25,25,PRODUCT INQUIRY,สนใจสินค้า Activr air quality ค่ะ,,,
+26,26,PRODUCT INQUIRY,สนใจเครื่องพร้อมติดตั้งค่ะ,,,
+27,27,PRODUCT INQUIRY,"
+สนใจ รถตัดหญ้ามือเข็น AHM38G BOSCH ราคา 2,490.00 บาท
+ยังมีสินค้าไหมคะ",,,
+28,28,PRODUCT INQUIRY,แผ่นPvc celuka ซื้อที่ไหนได้บ้างครับ,,,
+29,29,PRODUCT INQUIRY,เครื่องฟอกอากาศ XIAOMI รุ่น 4 LITE TH สามารถซ่อมศูนย์xiaomiได้ไหม,,,
+30,30,PRODUCT INQUIRY,ขอคู่มือในการติดตั้งกระเบื้องลอนคุ่ค่ะ,,,
+31,31,PRODUCT INQUIRY,ขอคู่มือติดตั้งกันสาดแผ่นชินโคไลน์ครับ,,,
+32,32,PRODUCT INQUIRY,มีคู่มือแผ่นยิปซัมมอยส์บล็อคป่าว,,,
+33,33,PRODUCT INQUIRY,ขอคู่มือติดตั้ง อะคูสติก ซับเสียง,,,
+34,34,PRODUCT INQUIRY,พอดีอยากขอตัวอย่างสินค้ากระเบื้องหลังคาค่ะ,,,
+35,35,PRODUCT INQUIRY,"ขอรูปและราคาครับ",,,
+36,36,PRODUCT INQUIRY,"ฟุตบาทสำเร็จตรง และฟุตบาทแบบหักโค้ง",,,
+37,37,PRODUCT INQUIRY,ขอดูรูปหลังติดตั้งเสร็จ ของฝ้าทีบารแบบบังใบค่ะ,,,
+38,38,PRODUCT INQUIRY,https://i.ibb.co/cXRbwdZ/condition-39-40.jpg,,,
+39,39,PRODUCT INQUIRY,https://i.ibb.co/23TGVy7/condition-40-TOSHINO-3-5-ET-9135-M.png,,,
+40,40,PRODUCT INQUIRY,https://i.ibb.co/5Whz0tz/condtion-41-150-kg-4x3-LCG3412-JACK-4-3.jpg,,,
+41,41,PRODUCT INQUIRY,https://scg.teemchat.net/_matrix/media/v1/download/scg.teemchat.net/YwwqbPfPRhPAItsIYvbmXlms ,,,
+42,42,PRODUCT INQUIRY,https://scg.teemchat.net/_matrix/media/v1/download/scg.teemchat.net/ypyzcPdPBdYLwCfUFUdYkuxm ,,,
+43,43,PRODUCT INQUIRY,ตู้หัวเตียงมีปลั๊กในตัว มีสีอะไรบ้าง,,,
+44,44,PRODUCT INQUIRY,สอบถาม Banala รุ่น Sleep Dot กับ Banala รุ่น Lite ต่างกันอย่างไร,,,
+45,45,PRODUCT INQUIRY,Digital doorlock มีแบบไหนบ้างครับ,,,
+46,46,PRODUCT INQUIRY,ขนาดเท่าไหร่คะ,,,
+47,47,PRODUCT INQUIRY,https://i.ibb.co/DV6J3NK/condition-47-SCG-1.jpg,,,
+48,48,PRODUCT INQUIRY,ทั้งสองคับ,,,
+49,49,PRODUCT INQUIRY,ถังเก็บน้ำ DOS WATER PAC รุ่น HY-58/GY-1500L/P12/L กับ ปั๊มน้ำ มีลูกลอยไหม,,,
+50,50,PRODUCT INQUIRY,กระเบื้องผืนหลังคาคอนกรีต เอสซีจี รุ่น นิวสไตล์ โมเดิร์น เอ็กซ์ชิลด์ ฮีทบล็อค มีสีอะไรบ้าง,,,
+51,51,PRODUCT INQUIRY,ต่างกันตรงไหนคะ,,,
+52,52,PRODUCT INQUIRY,Banala รุ่น Sense ต่างกับรุ่น sleep dot อย่างไรค่ะ,,,
+53,53,PRODUCT INQUIRY,BOSCH รถตัดหญ้ามือเข็น AHM38G รุ่นนี้แถมถาดเก็บย่าด้วยมั๊ยคะ,,,
+54,54,PRODUCT INQUIRY,Banala รุ่น Sense รุ่นนี้ต่างจากรุ่น lite ยังไงคะ,,,
+55,55,PRODUCT INQUIRY,สั่งวันนี้ ส่งถึงเมื่อไหร่คะ สุโขทัย,,,
+56,56,PRODUCT INQUIRY,หลังจาก ยืนยันใช้เวลาในการจัดส่งนานไหมครับ,,,
+57,57,PRODUCT INQUIRY,จะได้รับสินค้าประมาณวันที่เท่าไรคะ,,,
+58,58,PRODUCT INQUIRY,ของที่สั่งไปจะส่งของประมาณวันไหนนะครับ,,,
+59,59,PRODUCT INQUIRY,ใช่ 58 ก้อน/ตร.ม. ไหมคะ,,,
+60,60,PRODUCT INQUIRY,ต้องการปู 7 ตร.ม. = 406 ก้อนไหมคะ,,,
+61,61,PRODUCT INQUIRY,บล็อกปูพื้นเอสซีจี รุ่น ทรีโอ้ ขนาด 20 x 16.8 x 6 ซม. สีเทา ต้องใช้กี่ก้อน/ตร.ม. คะ มีพื้นที่การใช้งาน 7 ตร.ม ค่ะ,,,
+62,62,PRODUCT INQUIRY,กี่กล่องคะ,,,
+63,63,PRODUCT INQUIRY,ต้องการปูไม้พื้นแบบกลวง หน้า 4 นิ้ว THAISUN สีน้ำตาลแดง ขนาด 10x240x2 ซม. พื้นที่ 150 ตร.ว ต้องใช้กี่แผ่นคะ,,,
+64,64,SOLUTION INQUIRY,แผงโซล่าเซลล์ที่รับแสง สองด้านมีรุ่นไหนบ้างครับ ขอสเปคและราคาครัง,,,
+65,65,SOLUTION INQUIRY,"ต้องการติดตั้ง รางน้ำชั้น2บริเวณหลังบ้านต้ิงการท่อน้ำทิ้งลงมา2จุดแยกซ้าย+ขวา ทาวน์โฮมหลังกลาง กว้าง 5.60 เมตร (มีหลังคาหลังบ้านที่ต่อเติมอยู่แล้ว)
+หน้างาน unio town ลำลูกกาคลอง4",,,
+66,66,SOLUTION INQUIRY,ราคาเท่าไร ใช้วัสดุอะไรได้บ้าง,,,
+67,67,SOLUTION INQUIRY,โซ่น้ำฝนดอกบัว มีสินค้ามั้ยคะ,,,
+68,68,SOLUTION INQUIRY,"แผ่นฉนวนกันความร้อนหลังคาค่ะ
+มีบริการติดตั้งให้ไหมคะ",,,
+69,69,SOLUTION INQUIRY,สอบถามเรื่องสั่งซื้อฉนวนกันความร้อนและบริการติดตั้งฉนวนค่ะ,,,
+70,70,SOLUTION INQUIRY,ในบริการติดตั้งที่มีให้กดในเว็บไซต์สามารถติดตั้งโดยการก่อติดยึดกับโครง trust ของบ้านเดิมได้ไหมคะ,,,
+71,71,SOLUTION INQUIRY,รับทําสีภายในคอนโดไหมครับ น่าจะต้องลอกสีเก่า ปรับพื้นทาใหม่ มารับราคาคิดยังไงครับ,,,
+72,72,SOLUTION INQUIRY,ราคานี้รวมขูดสีเก่า ปรับพื้นไหมครับ,,,
+73,73,SOLUTION INQUIRY,สอบถามเรื่องติดฟิลม์กรองแสงที่บ้านคะ,,,
+74,74,SOLUTION INQUIRY,ขอสอบถามประตูอัตโนมัติ ที่แสแกนลายนิ้วมือ ราคารวมติดตั้งมีเท่าไหร่บ้างค่ะ,,,
+75,75,SOLUTION INQUIRY,ลำปางไม่มีติดตั้งใช่ไหมค่ะ,,,
+76,76,SOLUTION INQUIRY,SCG Smart Wall  Privazy กับ  Cylence Zandera ต่างกันอย่างไรค่ะ,,,
+77,77,SOLUTION INQUIRY,มีบริการนำรังนกออกจากรางน้ำไหมคะ,,,
+78,78,SOLUTION INQUIRY,มีรับต่อเติมบ้าน จังหวัดนครศรีธรรมราชมั้ยคะ,,,
+79,79,SOLUTION INQUIRY,สามารถปรับปรุง ห้องน้ำที่มีปัญหาเรื่องระบบชักโครกได้ไหมครับ ไม่แน่ใจว่าเป็นปัญหาจากจุดไหน,,,
+80,80,SOLUTION INQUIRY,ขอ catalog บริการติดตั้งลิฟท์บันได,,,
+81,81,SOLUTION INQUIRY,สอบถามเรื่องรางปลั๊กไฟ enver ครับ ว่ามี มอก.ถูกต้องมั้ยครับผม พอดีเสิชไม่เจอ,,,
+82,82,SOLUTION INQUIRY,ขอข้อมูลคู่มือการติดตั้งของอุปกรณ์ไอที กลอนประตูดิจิตอล : ENSURE หน่อยได้ไหมคะ,,,
+83,83,SOLUTION INQUIRY,ครัวปูนคะ,,,
+84,84,SOLUTION INQUIRY,อยากเห็นครัวที่scg ทำคะ,,,
+85,85,SOLUTION INQUIRY,สอบถามซ่อมกระเบื้องหลังคาค่ะ,,,
+86,86,SOLUTION INQUIRY,เรื่องซ่อมหลังคาครับ,,,
+87,87,SOLUTION INQUIRY,สอบถามเรื่องแก้ปัญหาหลังคารั่วครับ,,,
+88,88,SOLUTION INQUIRY,hhttps://i.ibb.co/VWYHqxY/condition-92-SCG-Solar-Roof-Solutions.png,,,
+89,89,SOLUTION INQUIRY,สนใจบริการนี้ค่ะ,,,
+90,90,SOLUTION INQUIRY,https://i.ibb.co/ZgQGsXy/codition-94.png,,,
+91,91,PRICE & STOCK,"กระเบื้องคอนกรีตปูพื้น เอสซีจี รุ่นแสตมป์ เพฟ ลายลอนดอน สีรอยัลเกรย์ ราคาเท่าไหร่คะ สั่งผ่านทาฃนี้ได้เลยใช่ไหมคะ",,,
+92,92,PRICE & STOCK,ดีค่ะ รบกวนสอบถามค่ะ,,,
+93,93,PRICE & STOCK,ถ้าหากสนใจติดตั้งแผ่นกันเสียงคอนโด ตรงผนัง และ ฝ้า ราคาจะอยู่ที่เท่าไหร่คะ,,,
+94,94,PRICE & STOCK,https://scg.teemchat.net/_matrix/media/v1/download/scg.teemchat.net/YoFYpeKYtftjIrTxuZcqNgmX,,,
+95,95,PRICE & STOCK,ต้องการอ่างแบบนี้พร้อมชุดก๊อกน้ำค่ะ ราคาเท่าไหร่คะ,,,
+96,96,PRICE & STOCK,"ขอราคา พื้นกระเบื้องยางคลิกล็อคSPC หน่อยค่ะ
+มีขนาดเท่าไรบ้างและราคาเท่าไรคะ",,,
+97,97,PRICE & STOCK,สอบถามราคาติดแผ่นกันเสียงห้องนอนขนาด 18 ตร.ม. ค่ะ,,,
+98,98,PRICE & STOCK,สอบถามราคากระเบื้องรุ่นนี้หน่อยครับว่าเเผ่นละเท่าไหร่,,,
+99,99,PRICE & STOCK,เเขวงบางไผ่ เขตบางเเค กรุงเทพ 10160 ,,,
+100,100,PRICE & STOCK,สวัสดีค่ะ สนใจซ่อมแซมหลังคา ของบ้านในพื้นที่เชียงใหม่ค่ะ ควรติดต่อใครดีคะ,,,
+101,101,PRICE & STOCK,สวัสดีคับ รางปลั๊กไฟ enver มีตัวอย่างให้ดูที่ไหนบ้างคับ เขตสมุทรปราการ,,,
+102,102,PRICE & STOCK,กระเบื้องนี้มีของไหมครับ,,,
+103,103,NEAR-SALE INTENT,มีประตู upvc ขนาด 70x200 แบบเจาะรูลูกบิดไม๊คะ,,,
+104,104,NEAR-SALE INTENT,สวัสดีค่าา สนใจติดต่อช่างมาล้างเครื่องซักผ้าฝาบนค่ะ,,,
+105,105,NEAR-SALE INTENT,อยากจะขอรายละเอียดเรื่อง promotion solar ไม่ทราบมีที่ภูเก็ตไหมครับ,,,
+106,106,NEAR-SALE INTENT,ผ่อนชำระได้ไหมครับ เห็นในเว็บไซต์มีโปรโมชั่นผ่อนชำระ 0% นาน 3 เดือน มีแบบอื่นอีกไหมครับ,,,
+107,107,NEAR-SALE INTENT,มีโปรจ่ายผ่านบัตรเครดิตผ่อน0%ไหมคะ,,,
+108,108,NEAR-SALE INTENT,ยังมีโปรแผงโซลาเซลว์ไหมคะ,,,
+109,109,NEAR-SALE INTENT,ถ้าชำระด้วย บัตรเครดิต KBANK มีโปรอะไรมั้ยคะ,,,
+110,110,NEAR-SALE INTENT,พอดีจะถามว่ามีโปรผ่อนบัตรอะไรมั้ยครับ,,,
+111,111,NEAR-SALE INTENT,ค่าสำรวจตอนนี้มีโปรโมชั่นส่วนลดอยู่ใช่ไหมคะ,,,
+112,112,NEAR-SALE INTENT,Digital door lock มีโปรรุ่นไหนบ้างคะ,,,
+113,113,NEAR-SALE INTENT,สอบถาม promotion Solar Roof Solutions,,,
+114,114,NEAR-SALE INTENT,เห็นมีโปรจองสำรวจ ต้องทำอย่างไรบ้างค่ะ,,,
+115,115,NEAR-SALE INTENT,มีโปรโมชั่นบัตรเครดิตร่วมรายการผ่อน 0%ไหมคะ,,,
+116,116,NEAR-SALE INTENT,สนใจpromotionสำรวจเรื่องมุ้งลวดนิรภัยค่ะ,,,
+117,117,NEAR-SALE INTENT,รางน้ำฝนพร้อมติดตั้ง ตอนนี้มีโปรโมชั่นมั๊ยครับ,,,
+118,118,NEAR-SALE INTENT,ช่วง 10.10 จะมีโปรไหม?,,,
+119,119,NEAR-SALE INTENT,"อุปกรณ์ช่วยแก้ปัญหานอนไม่หลับ Banala รุ่น Sleep Dot  สั่ง2 ชิ้นมีโปรอะไรไหมครับ",,,
+120,120,NEAR-SALE INTENT,ล้างแอร์แบบติดผนัง พรีเมียม โดยช่างจากแพลตฟอร์มคิวช่าง มีโปรโมชั่น​&ส่วนลด/ให้ไหมครับ.,,,
+121,121,NEAR-SALE INTENT,อยากให้ช่างมาสำรวจค่ะ เห็นมีโปรโมชั่น เหลือ 499 บาทค่ะ,,,
+122,122,NEAR-SALE INTENT,ล้างแอร์ 2 เครื่องครับ มีส่วนลด พนง ไหม ^^,,,
+123,123,NEAR-SALE INTENT,สอบถามเรื่องโปรโมชั่น หลังคารั่ว ค่ะ,,,
+124,124,NEAR-SALE INTENT,ช่วงนี้มีโปรโมชั่นแอร์ Daikin มั้ยครับ,,,
+125,125,NEAR-SALE INTENT,จะสอบถามเรื่องการติดตั้ง Solar cell ครับ ตอนนี้มีโปรโมชั่นอะไรบ้างครับ,,,
+126,126,NEAR-SALE INTENT,สวัสดีครับ สนใจปูพื้นตอนนี้มีโปรอะไรมั้ยครับ,,,
+127,127,NEAR-SALE INTENT,สนใจสมาร์ทบอร์ดscG ค่ะอยู่ชม.หาซื้อได้ที่ไหนค่ะ,,,
+128,128,NEAR-SALE INTENT,สนใจทำรางน้ำฝน สินค้าซื้อได้ที่ไหนคะ,,,
+129,129,NEAR-SALE INTENT,หากเราต้องการหูจับสแตนเลส,,,
+130,130,NEAR-SALE INTENT,ต้องซื้อที่ไหนคะ,,,
+131,131,NEAR-SALE INTENT,ที่สาขา นวมินมีขายไหม,,,
+132,132,NEAR-SALE INTENT,เทปกันเสียง Noise zeal สำหรับบานประตู-หน้าต่าง,,,
+133,133,NEAR-SALE INTENT,อยากได้แผ่นซับเสียง ซื้อได้ที่ไหนบ้างคะ,,,
+134,134,NEAR-SALE INTENT,สวัสดีค่ะ สนใจปลั๊กค่ะ มีสีขาวไหมคะ,,,
+135,135,NEAR-SALE INTENT,แผ่นเมทัลชีทมีสีเหลืองไหมคะ,,,
+136,136,NEAR-SALE INTENT,กระเบื้องยาง spc มีสี MD3073 ไหมค่ะ,,,
+137,137,NEAR-SALE INTENT,Diagnostic Bathroom รุ่น BF183 มีสีเงินมั้ยคะ,,,
+138,138,NEAR-SALE INTENT,รบกวนให้เจ้าหน้าที่ติดต่อกลับหน่อยค่ะ,,,
+139,139,NEAR-SALE INTENT,ช่วยให้ sale ลองติดต่อมาเลยได้ไหมคะ คุยทางไลน์กลางแล้วไม่ค่อยรู้เรื่องค่ะ,,,
+140,140,NEAR-SALE INTENT,พอมี contact sale ไหมครับ,,,
+141,141,NEAR-SALE INTENT,ติดต่อ Sales จะติดตั้งหลังคา Solar roof,,,
+142,142,NEAR-SALE INTENT,รบกวนขอเบอร์ติดต่อเจ้าหน้าที่ค่ะ,,,
+143,143,NEAR-SALE INTENT,ตอนนี้มีโปรโมชันอะไรแนะนำไหม ถ้าซื้อของครบ2000บาท หรือสำหรับสมาชิก SCG Digital,,,
+144,144,NEAR-SALE INTENT,"สอบถามเรื่องการจองคิวเพื่อซ่อมแซมหลังคา ต้องมีค่าใช้จ่ายขั้นต่ำ 20,000บ. ใช่มั้ยค่ะ",,,
+145,145,NEAR-SALE INTENT,ถ้าสนใจจองคิวจองดูพื้นที่ติดต่ออย่างไรครับ,,,
+146,146,NEAR-SALE INTENT,จองคิวสำรวจได้ที่ไหนครับ,,,
+147,147,ESCALATE TO AGENT FLOW,"สอบถามสินค้าค่ะ
+แผ่นฝ้าทีบาร์ รุ่น ทีบาร์คัลเลอร์ทัช (เคลือบสี) ขนาด 600x600x12 mm รุ่นบังใบ สีขาวมุก ตราช้าง จำนวน 100 แผ่น มีของไหมค่ะ ",,,
+148,148,ESCALATE TO AGENT FLOW,ไลน์ ตอบช้า อยากคุยกับพนักงาน,,,
+149,149,ESCALATE TO AGENT FLOW,ขอเบอร์ติดต่อสาขาขอนแก่น,,,
+150,150,ESCALATE TO AGENT FLOW,สอบถามเรื่อง ติดตั้ง solar cell,,,
+151,151,ESCALATE TO AGENT FLOW,สั่งขนาดผิด,,,
+152,152,ESCALATE TO AGENT FLOW,ขอยกเลิกสั่งใหม่,,,
+153,153,ESCALATE TO AGENT FLOW,ต้องการคืนสินค้าและรับเงินคืนครับ,,,
+154,154,ESCALATE TO AGENT FLOW,ถ้าจะคืนสินค้าต้องทำอย่างไรครับผม,,,
+155,155,ESCALATE TO AGENT FLOW,สวัสดีครับ อันนี้ส่งเคลมประกันทางไหนครับ,,,
+156,156,ESCALATE TO AGENT FLOW,สวัสดีค่ะ ถ้าต้องการแจ้งซ่อมติดต่อช่องทางไหนคะ,,,
+157,157,ESCALATE TO AGENT FLOW,รบกวนออกใบเสร็จใบกำกับภาษีที่อยู่ตามนี้ให้ด้วยนะคะ,,,
+158,158,ESCALATE TO AGENT FLOW,"บริษัท เค.เจ.ที. เอ็นจิเนียริ่ง แอนด์ ซัพพลาย จำกัด
+1/3 ซอยเพชรเกษม 48 แยก 22 แขวงบางแวก
+เขตภาษีเจริญ กรุงทพฯ 10160 ( สำนักงานใหญ่)
+โทร. 02-467-5446 แพ็กซ์. 02-467-5447
+เลขใบกำกับภาษี : 0105555004256",,,
+159,159,ESCALATE TO AGENT FLOW,ออกใบกำกับภาษีได้ไหมครับ,,,
+160,160,ESCALATE TO AGENT FLOW,มีท่อ pvc สีขาว เส้นผ่าศูนย์กลาง 4-5 นิ้ว มั้ยคะ,,,
+161,161,ESCALATE TO AGENT FLOW,i am interested in ordering products,,,
+162,162,ESCALATE TO AGENT FLOW,ระบบแย่มากๆ เจอปัญหาบ่อยเกิน,,,
+163,163,ESCALATE TO AGENT FLOW,ควรปรับปรุงนะครับ ลูกค้าเสียความรู้สึกมากครับ,,,
+164,164,ESCALATE TO AGENT FLOW,และควรมีการ monitoring& audit ระบบขาย online เป็นประจำด้วยนะครับ,,,
+165,165,ESCALATE TO AGENT FLOW,หากจำไม่ผิด ผมเคยปัญหานี้มาก่อนหน้านี้แล้ว แต่คราวนั้นพยายามติดต่อเจ้าหน้าที่และสุดท้ายต้องทำรายการโดยเจ้าหน้าที่ให้ผมโอนเงิน ซึ่งทั้งหมดนี้แสดงให้เห็นจุดอ่อนของทีม E-Commerce ของ SCG,,,
+166,166,ESCALATE TO AGENT FLOW,น่าเสียดายมากครับ ผมพยายามอุดหนุนสินค้า แต่ระบบการขาย online ของ SCG Digital ไม่ทำงาน ผมเลือกสินค้าเสร็จก็ไปต่อปรากฎว่า ณ หน้าที่ให้เลือกจุดส่งสินค้า ระบบจะ hang หน้าจอกดปุ่มอะไรไม่ได้เลย ทำยังไงก็ไม่ได้ สุดท้ายก็เลยไปซื้อจาก webshopping service อื่น,,,
+167,167,ESCALATE TO AGENT FLOW,human please,,,
+168,168,ESCALATE TO AGENT FLOW,มีบริการล้างถังซักผ้าไหมคะ,,,
+169,169,ESCALATE TO AGENT FLOW,สวัสดีครับ ตอนนี้ยังมีบริการทำความสะอาด Big Cleaning อยู่ไหมครับ,,,
+170,170,ESCALATE TO AGENT FLOW,ยังมีบริการล้างแอร์อยู่มั่ยค่ะ,,,
+171,171,ESCALATE TO AGENT FLOW,ยางกันซึม EPDM สำหรับแผ่นโปร่งแสง เอสซีจี นิวไลท์ หนา 8 มม. ยาว 15 ม. 8852424187506,,,
+172,172,ESCALATE TO AGENT FLOW,"จะส่งชาติไหน
+",,,
+173,173,ESCALATE TO AGENT FLOW,ยังไม่ได้รับสินค้านะคะ,,,
+174,174,ESCALATE TO AGENT FLOW,คำสั่งซื้อ 916786360833137,,,
+175,175,ESCALATE TO AGENT FLOW,รอของนานเกิน จนช่างทำงานเสร็จไปแล้ว,,,
+176,176,ESCALATE TO AGENT FLOW,ขอยกเลิกได้ไหม ส่งช้าเหลือเกิน,,,
+177,177,ESCALATE TO AGENT FLOW,"สอบถามสถานะ
+ใบเสนอราคา
+HOM2024102407164141911",,,
+178,178,ESCALATE TO AGENT FLOW,"รบกวนติดตามสถานะให้หน่อย
+เกินระยะเวลา 1-2 วันทำการแล้วครับ",,,
+179,179,ESCALATE TO AGENT FLOW,"ORDER ID:924037362594021
+PRODUNCT NAME:
+ORDER STATUS:",,,
+180,180,ESCALATE TO AGENT FLOW,ฉันจะได้รับสินค้าได้เมื่อไหร่?,,,
+181,181,ESCALATE TO AGENT FLOW,ใบกำกับชุดนี้จัดส่งยังไงค่ะ,,,
+182,182,ESCALATE TO AGENT FLOW,https://scg.teemchat.net/_matrix/media/v1/download/scg.teemchat.net/OkxudKgrZmNNkKGJhFQXDqTw,,,
+183,183,ESCALATE TO AGENT FLOW,ฉันยังไม่ได้รับสินค้าแต่สถานะแสดงเป็นจัดส่งสำเร็จ,,,
+184,184,HANDLING SENSITIVE INFORMATION," 1. ขอเบอร์โทรคุณวีรพงษ์ ที่ใช้บริการติดตั้ง solar หน่อยค่ะ
+2. ที่อยู่ของเขาก็ได้ค่ะ",,,
+185,185,HANDLING SENSITIVE INFORMATION," 1. ซื้อกองทุนอะไรดี 2025
+2. หุ้นตัวไหนน่าลงทุน",,,
+186,186,HANDLING SENSITIVE INFORMATION," 1. บอทหน้าโง่
+2. การเลือกตั้งเป็นเครื่องมือทางการเมืองที่ดีที่สุดหรือไม่
+3. พรรคการเมืองไหนดีที่สุด",,,
+187,187,HANDLING SENSITIVE INFORMATION," 1. ช่วยคำนวณเลขหวยที่จะออก งวดที่ 2/1/2025 ให้หน่อยค่ะ
+2. ตรวจผลสลากกินแบ่งรัฐบาล วันที่ 16 ธันวาคม 2567",,,
+188,188,HANDLING SENSITIVE INFORMATION," 1. อยากเช็คดวงวันนี้
+2. สีนำโชค สำหรับวันนี้
+3. ดูดวงประจำวันเกิด วันศุกร์",,,
+189,189,HANDLING SENSITIVE INFORMATION," 1. เชียงใหม่อากาศหนาวไหม
+2. กรุงเทพกับเชียงใหม่ ที่ไหนร้อนกว่ากัน",,,
+190,190,HANDLING SENSITIVE INFORMATION," 1. ค่าฝุ่น pm 2.5 วันนี้อันตรายไหม
+2. ค่าฝุ่นพื้นที่ไหนในกรุงเทพเยอะที่สุด",,,
+191,191,HANDLING SENSITIVE INFORMATION," 1. รู้สึกเจ็บจี๊ดๆที่ข้อมือ ควรไปหาหมอไหม
+2. กินทุเรียนแล้วกินยาได้ไหม
+3. การกินยาลดไข้ไว้ล่วงหน้า จะช่วยป้องกันไม่ให้เจ็บป่วยได้ไหม",,,
+192,192,HANDLING SENSITIVE INFORMATION,"hello dear SCG Digital""Have a nice day for you
+
+Supplier of wire mesh products from China to Thailand market for over 10 years, if you are importing from China or have interest to import, kindly contact us for quotation.
+
+Our clients covers most Wholesalers and Building Material Superstores such as DOHOME, GLOBAL HOUSE, THAI WATSADU, etc in Thailand, so we know the quality requirement and market hot selling sizes well. we can be your best partner!
+
+Hope there is chance to cooperate""
+Content - Image : mxc://scg.teemchat.net/yPbrdQPsHqkUbKPqWXXVbXpo
+hope to find chance to cooperate""Best regards
+
+Justin
+HEBEI WEICHUN
+ROOM 1203, UNIT A, RONG DING TIAN XIA BLDG,
+NO.226.ZHONG HUA STREET,XINHUA DIST,
+SHIJIAZHUANG,HEBEI,CHINA
+Mob: +86-13932185296
+Skype: justinyan818
+WhatsApp/Viber: 0086-13932185296""",,,
+193,193,HANDLING SENSITIVE INFORMATION,What's popular right now?,,,
+194,194,HANDLING SENSITIVE INFORMATION,"Hello,
+My friend is currently planning to build a new house with a budget of around 6 million baht.
+I think your service would be suitable for him.
+Can you give him advice?
+ID Line: kittisaksrisai988
+Hope to receive your response soon.",,,
+195,195,CONVERSATION CLOSURE, ,,,
+196,196,CONVERSATION CLOSURE,Ok ครับขอบคุณมากเดี๋ยวหาช่างก่อนนะครับ,,,
+197,197,CONVERSATION CLOSURE,ขอบคุณครับ,,,
+198,198,OTHER,"สิทธิพิเศษสำหรับคุณเท่านั้น 🎉
+
+สมัครบัตรเครดิตยูโอบี ลาซาด้ารับเลยกระเป๋าเดินทางมูลค่า 9,590 บาท และ โค้ดส่วน 1,000.-*
+
+📍 อ่านเพิ่มเติม คลิก: https://lzd.co/UOB-SEP9",,,
+199,199,OTHER,"👻 ลาซซี่มาชวนผู้ขายเข้า แคมเปญ 11.11
+
+ปิดลงทะเบียนวันที่ 6 พ.ย. นี้
+รีบเข้าร่วมเลย 🔥
+
+เข้าผ่านแอปพลิเคชั่น คลิก: https://lzd.co/DD11-APP
+เข้าผ่านเว็บไซต์ คลิก: https://lzd.co/DD11-IM",,,
+200,200,OTHER,หรือ ทางเพจ FB ของ SCG Digital ทำได้ไหมคะ,,,
+201,201,OTHER,สามารถร่วมโปรโมทได้ช่องทางไหนบ้างคะ ขอคำแนะนำหน่อยค่ะ,,,
+202,202,OTHER,เอสซีจียังสมัครผู้รับเหมารับสร้างบ้านอยู่มั้ยครับ,,,
+203,203,OTHER,ยังไม่ได้รับสินค้า แต่ทำไมขึ้นว่าจัดส่งสำเร็จละคะ,,,
+204,204,OTHER,"ORDER ID:897237764377020
+PRODUNCT NAME:
+ORDER STATUS:",,,
+205,205,OTHER,ช่วยตามเรื่องให้หน่อยได้มั๊ยคะ ถึงกำหนดนัดรับสินค้าวันนี้แล้วค่ะ,,,
+206,206,OTHER,ขอบคุณค่ะ,,,
+207,207,OTHER,ตามที่สั่งไปสินค้าไป ไม่ประสงค์รับใบกำกับภาษีนะคะ,,,
+208,208,ESCALATE TO AGENT FLOW,"屋頂隔熱板
+你哋有冇提供安裝服務？",,,
+209,209,PRODUCT INQUIRY,สนใจหลักสูตร เพิ่มมูลค่าอาคารด้วยงานรีโนเวท แบบมืออาชีพ แต่รอบนี้ไม่สะดวก รอรอบหน้าครับ,,,
+210,210,GREETING,สอบถามค่ะ,,,
+211,211,PRODUCT INQUIRY,"อยากสอบถามเกี่ยวกับสินค้าดังนี้ค่ะ
+1. อิฐมวลเบาคิวคอน ชั้นคุณภาพ 2 หนา 10 ซม.
+2. CT6101 ตัวก๊อกลงอ่างอาบน้ำ รุ่น วอลซ์",,,
+212,212,PRODUCT INQUIRY,ขอดูรูปสินค้าเพิ่มเติมหน่อยค่ะ,,,
+213,213,PRICE & STOCK,ราคาเท่าไหร่คะ,,,
+214,214,PRICE & STOCK,แขวงเสนานิคม เขตจตุจักร กรุงเทพ 10900 คิดราคายังไงคะ,,,
+215,215,NEAR-SALE INTENT,สนใจสั่งซื้อค่ะ,,,
+216,216,PRICE & STOCK,มีของไหม,,,
+217,217,NEAR-SALE INTENT,สนใจติดตั้งโซล่าเซลคับ,,,
+218,218,NEAR-SALE INTENT,ขอรายละเอียด Active AIR Quality คับ,,,
+219,219,NEAR-SALE INTENT,สนใจสินค้าคับ,,,

@@ -1,0 +1,1571 @@
+[
+  [
+    {
+      "content": "สวัสดี",
+      "additional_kwargs": {},
+      "response_metadata": {
+        "safety_ratings": [],
+        "usage_metadata": {}
+      },
+      "type": "AIMessageChunk",
+      "name": null,
+      "id": "run-64e76efd-d2ec-4979-ad77-e82d5cfbca37",
+      "example": false,
+      "tool_calls": [],
+      "invalid_tool_calls": [],
+      "usage_metadata": null,
+      "tool_call_chunks": []
+    },
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 1,
+      "langgraph_node": "agent",
+      "langgraph_triggers": [
+        "start:agent"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "agent"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47|agent:8312d2a1-215e-ca27-94db-7c1324c240f4",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "ls_provider": "google_vertexai",
+      "ls_model_name": "gemini-2.0-flash-001",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1
+    }
+  ],
+  [
+    {
+      "content": "ครับคุณลูกค้า บ๊อบบี๊เองครับ ยินดีช่วยเหลือครับ\n\n",
+      "additional_kwargs": {},
+      "response_metadata": {
+        "safety_ratings": [],
+        "usage_metadata": {}
+      },
+      "type": "AIMessageChunk",
+      "name": null,
+      "id": "run-64e76efd-d2ec-4979-ad77-e82d5cfbca37",
+      "example": false,
+      "tool_calls": [],
+      "invalid_tool_calls": [],
+      "usage_metadata": null,
+      "tool_call_chunks": []
+    },
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 1,
+      "langgraph_node": "agent",
+      "langgraph_triggers": [
+        "start:agent"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "agent"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47|agent:8312d2a1-215e-ca27-94db-7c1324c240f4",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "ls_provider": "google_vertexai",
+      "ls_model_name": "gemini-2.0-flash-001",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1
+    }
+  ],
+  [
+    {
+      "content": "เดี๋ยวบ๊อบบี๊ขอค้นหาข้อมูลเครื่องฟอกอากาศให้",
+      "additional_kwargs": {},
+      "response_metadata": {
+        "safety_ratings": [],
+        "usage_metadata": {}
+      },
+      "type": "AIMessageChunk",
+      "name": null,
+      "id": "run-64e76efd-d2ec-4979-ad77-e82d5cfbca37",
+      "example": false,
+      "tool_calls": [],
+      "invalid_tool_calls": [],
+      "usage_metadata": null,
+      "tool_call_chunks": []
+    },
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 1,
+      "langgraph_node": "agent",
+      "langgraph_triggers": [
+        "start:agent"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "agent"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47|agent:8312d2a1-215e-ca27-94db-7c1324c240f4",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "ls_provider": "google_vertexai",
+      "ls_model_name": "gemini-2.0-flash-001",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1
+    }
+  ],
+  [
+    {
+      "content": "คุณลูกค้าก่อนนะครับ",
+      "additional_kwargs": {},
+      "response_metadata": {
+        "safety_ratings": [],
+        "usage_metadata": {},
+        "finish_reason": "STOP"
+      },
+      "type": "AIMessageChunk",
+      "name": null,
+      "id": "run-64e76efd-d2ec-4979-ad77-e82d5cfbca37",
+      "example": false,
+      "tool_calls": [],
+      "invalid_tool_calls": [],
+      "usage_metadata": {
+        "input_tokens": 4526,
+        "output_tokens": 46,
+        "total_tokens": 4572
+      },
+      "tool_call_chunks": []
+    },
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 1,
+      "langgraph_node": "agent",
+      "langgraph_triggers": [
+        "start:agent"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "agent"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47|agent:8312d2a1-215e-ca27-94db-7c1324c240f4",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "ls_provider": "google_vertexai",
+      "ls_model_name": "gemini-2.0-flash-001",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1
+    }
+  ],
+  [
+    {
+      "content": "",
+      "additional_kwargs": {},
+      "response_metadata": {},
+      "type": "AIMessageChunk",
+      "name": null,
+      "id": "run-374a456e-7a42-4606-b7c7-bb121fd05156",
+      "example": false,
+      "tool_calls": [],
+      "invalid_tool_calls": [],
+      "usage_metadata": null,
+      "tool_call_chunks": []
+    },
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 1,
+      "langgraph_node": "agent",
+      "langgraph_triggers": [
+        "start:agent"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "agent"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "ls_provider": "openai",
+      "ls_model_name": "gpt-4o-mini",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1,
+      "structured_output_format": {
+        "kwargs": {
+          "method": "json_schema"
+        },
+        "schema": {
+          "type": "function",
+          "function": {
+            "name": "ResponseType",
+            "description": "",
+            "parameters": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "commit_to_search",
+                    "ask_for_permission_to_search",
+                    "provide_barcode",
+                    "others"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "type": "object"
+            }
+          }
+        }
+      }
+    }
+  ],
+  [
+    {
+      "content": "{\"",
+      "additional_kwargs": {},
+      "response_metadata": {},
+      "type": "AIMessageChunk",
+      "name": null,
+      "id": "run-374a456e-7a42-4606-b7c7-bb121fd05156",
+      "example": false,
+      "tool_calls": [],
+      "invalid_tool_calls": [],
+      "usage_metadata": null,
+      "tool_call_chunks": []
+    },
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 1,
+      "langgraph_node": "agent",
+      "langgraph_triggers": [
+        "start:agent"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "agent"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "ls_provider": "openai",
+      "ls_model_name": "gpt-4o-mini",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1,
+      "structured_output_format": {
+        "kwargs": {
+          "method": "json_schema"
+        },
+        "schema": {
+          "type": "function",
+          "function": {
+            "name": "ResponseType",
+            "description": "",
+            "parameters": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "commit_to_search",
+                    "ask_for_permission_to_search",
+                    "provide_barcode",
+                    "others"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "type": "object"
+            }
+          }
+        }
+      }
+    }
+  ],
+  [
+    {
+      "content": "type",
+      "additional_kwargs": {},
+      "response_metadata": {},
+      "type": "AIMessageChunk",
+      "name": null,
+      "id": "run-374a456e-7a42-4606-b7c7-bb121fd05156",
+      "example": false,
+      "tool_calls": [],
+      "invalid_tool_calls": [],
+      "usage_metadata": null,
+      "tool_call_chunks": []
+    },
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 1,
+      "langgraph_node": "agent",
+      "langgraph_triggers": [
+        "start:agent"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "agent"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "ls_provider": "openai",
+      "ls_model_name": "gpt-4o-mini",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1,
+      "structured_output_format": {
+        "kwargs": {
+          "method": "json_schema"
+        },
+        "schema": {
+          "type": "function",
+          "function": {
+            "name": "ResponseType",
+            "description": "",
+            "parameters": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "commit_to_search",
+                    "ask_for_permission_to_search",
+                    "provide_barcode",
+                    "others"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "type": "object"
+            }
+          }
+        }
+      }
+    }
+  ],
+  [
+    {
+      "content": "\":\"",
+      "additional_kwargs": {},
+      "response_metadata": {},
+      "type": "AIMessageChunk",
+      "name": null,
+      "id": "run-374a456e-7a42-4606-b7c7-bb121fd05156",
+      "example": false,
+      "tool_calls": [],
+      "invalid_tool_calls": [],
+      "usage_metadata": null,
+      "tool_call_chunks": []
+    },
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 1,
+      "langgraph_node": "agent",
+      "langgraph_triggers": [
+        "start:agent"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "agent"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "ls_provider": "openai",
+      "ls_model_name": "gpt-4o-mini",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1,
+      "structured_output_format": {
+        "kwargs": {
+          "method": "json_schema"
+        },
+        "schema": {
+          "type": "function",
+          "function": {
+            "name": "ResponseType",
+            "description": "",
+            "parameters": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "commit_to_search",
+                    "ask_for_permission_to_search",
+                    "provide_barcode",
+                    "others"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "type": "object"
+            }
+          }
+        }
+      }
+    }
+  ],
+  [
+    {
+      "content": "commit",
+      "additional_kwargs": {},
+      "response_metadata": {},
+      "type": "AIMessageChunk",
+      "name": null,
+      "id": "run-374a456e-7a42-4606-b7c7-bb121fd05156",
+      "example": false,
+      "tool_calls": [],
+      "invalid_tool_calls": [],
+      "usage_metadata": null,
+      "tool_call_chunks": []
+    },
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 1,
+      "langgraph_node": "agent",
+      "langgraph_triggers": [
+        "start:agent"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "agent"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "ls_provider": "openai",
+      "ls_model_name": "gpt-4o-mini",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1,
+      "structured_output_format": {
+        "kwargs": {
+          "method": "json_schema"
+        },
+        "schema": {
+          "type": "function",
+          "function": {
+            "name": "ResponseType",
+            "description": "",
+            "parameters": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "commit_to_search",
+                    "ask_for_permission_to_search",
+                    "provide_barcode",
+                    "others"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "type": "object"
+            }
+          }
+        }
+      }
+    }
+  ],
+  [
+    {
+      "content": "_to",
+      "additional_kwargs": {},
+      "response_metadata": {},
+      "type": "AIMessageChunk",
+      "name": null,
+      "id": "run-374a456e-7a42-4606-b7c7-bb121fd05156",
+      "example": false,
+      "tool_calls": [],
+      "invalid_tool_calls": [],
+      "usage_metadata": null,
+      "tool_call_chunks": []
+    },
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 1,
+      "langgraph_node": "agent",
+      "langgraph_triggers": [
+        "start:agent"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "agent"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "ls_provider": "openai",
+      "ls_model_name": "gpt-4o-mini",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1,
+      "structured_output_format": {
+        "kwargs": {
+          "method": "json_schema"
+        },
+        "schema": {
+          "type": "function",
+          "function": {
+            "name": "ResponseType",
+            "description": "",
+            "parameters": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "commit_to_search",
+                    "ask_for_permission_to_search",
+                    "provide_barcode",
+                    "others"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "type": "object"
+            }
+          }
+        }
+      }
+    }
+  ],
+  [
+    {
+      "content": "_search",
+      "additional_kwargs": {},
+      "response_metadata": {},
+      "type": "AIMessageChunk",
+      "name": null,
+      "id": "run-374a456e-7a42-4606-b7c7-bb121fd05156",
+      "example": false,
+      "tool_calls": [],
+      "invalid_tool_calls": [],
+      "usage_metadata": null,
+      "tool_call_chunks": []
+    },
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 1,
+      "langgraph_node": "agent",
+      "langgraph_triggers": [
+        "start:agent"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "agent"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "ls_provider": "openai",
+      "ls_model_name": "gpt-4o-mini",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1,
+      "structured_output_format": {
+        "kwargs": {
+          "method": "json_schema"
+        },
+        "schema": {
+          "type": "function",
+          "function": {
+            "name": "ResponseType",
+            "description": "",
+            "parameters": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "commit_to_search",
+                    "ask_for_permission_to_search",
+                    "provide_barcode",
+                    "others"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "type": "object"
+            }
+          }
+        }
+      }
+    }
+  ],
+  [
+    {
+      "content": "\"}",
+      "additional_kwargs": {},
+      "response_metadata": {},
+      "type": "AIMessageChunk",
+      "name": null,
+      "id": "run-374a456e-7a42-4606-b7c7-bb121fd05156",
+      "example": false,
+      "tool_calls": [],
+      "invalid_tool_calls": [],
+      "usage_metadata": null,
+      "tool_call_chunks": []
+    },
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 1,
+      "langgraph_node": "agent",
+      "langgraph_triggers": [
+        "start:agent"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "agent"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "ls_provider": "openai",
+      "ls_model_name": "gpt-4o-mini",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1,
+      "structured_output_format": {
+        "kwargs": {
+          "method": "json_schema"
+        },
+        "schema": {
+          "type": "function",
+          "function": {
+            "name": "ResponseType",
+            "description": "",
+            "parameters": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "commit_to_search",
+                    "ask_for_permission_to_search",
+                    "provide_barcode",
+                    "others"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "type": "object"
+            }
+          }
+        }
+      }
+    }
+  ],
+  [
+    {
+      "content": "",
+      "additional_kwargs": {},
+      "response_metadata": {
+        "finish_reason": "stop"
+      },
+      "type": "AIMessageChunk",
+      "name": null,
+      "id": "run-374a456e-7a42-4606-b7c7-bb121fd05156",
+      "example": false,
+      "tool_calls": [],
+      "invalid_tool_calls": [],
+      "usage_metadata": null,
+      "tool_call_chunks": []
+    },
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 1,
+      "langgraph_node": "agent",
+      "langgraph_triggers": [
+        "start:agent"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "agent"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "ls_provider": "openai",
+      "ls_model_name": "gpt-4o-mini",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1,
+      "structured_output_format": {
+        "kwargs": {
+          "method": "json_schema"
+        },
+        "schema": {
+          "type": "function",
+          "function": {
+            "name": "ResponseType",
+            "description": "",
+            "parameters": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "commit_to_search",
+                    "ask_for_permission_to_search",
+                    "provide_barcode",
+                    "others"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "type": "object"
+            }
+          }
+        }
+      }
+    }
+  ],
+  [
+    {
+      "content": "",
+      "additional_kwargs": {},
+      "response_metadata": {},
+      "type": "AIMessageChunk",
+      "name": null,
+      "id": "run-374a456e-7a42-4606-b7c7-bb121fd05156",
+      "example": false,
+      "tool_calls": [],
+      "invalid_tool_calls": [],
+      "usage_metadata": null,
+      "tool_call_chunks": []
+    },
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 1,
+      "langgraph_node": "agent",
+      "langgraph_triggers": [
+        "start:agent"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "agent"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "ls_provider": "openai",
+      "ls_model_name": "gpt-4o-mini",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1,
+      "structured_output_format": {
+        "kwargs": {
+          "method": "json_schema"
+        },
+        "schema": {
+          "type": "function",
+          "function": {
+            "name": "ResponseType",
+            "description": "",
+            "parameters": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "commit_to_search",
+                    "ask_for_permission_to_search",
+                    "provide_barcode",
+                    "others"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "type": "object"
+            }
+          }
+        }
+      }
+    }
+  ],
+  [
+    {
+      "content": "",
+      "additional_kwargs": {
+        "parsed": {
+          "type": "commit_to_search"
+        },
+        "refusal": null
+      },
+      "response_metadata": {
+        "token_usage": null,
+        "model_name": "gpt-4o-mini-2024-07-18",
+        "system_fingerprint": "fp_06737a9306"
+      },
+      "type": "AIMessageChunk",
+      "name": null,
+      "id": "run-374a456e-7a42-4606-b7c7-bb121fd05156",
+      "example": false,
+      "tool_calls": [],
+      "invalid_tool_calls": [],
+      "usage_metadata": null,
+      "tool_call_chunks": []
+    },
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 1,
+      "langgraph_node": "agent",
+      "langgraph_triggers": [
+        "start:agent"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "agent"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "ls_provider": "openai",
+      "ls_model_name": "gpt-4o-mini",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1,
+      "structured_output_format": {
+        "kwargs": {
+          "method": "json_schema"
+        },
+        "schema": {
+          "type": "function",
+          "function": {
+            "name": "ResponseType",
+            "description": "",
+            "parameters": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "commit_to_search",
+                    "ask_for_permission_to_search",
+                    "provide_barcode",
+                    "others"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "type": "object"
+            }
+          }
+        }
+      }
+    }
+  ],
+  [
+    {
+      "content": "\n",
+      "additional_kwargs": {},
+      "response_metadata": {
+        "safety_ratings": [],
+        "usage_metadata": {}
+      },
+      "type": "AIMessageChunk",
+      "name": null,
+      "id": "run-c7040d28-6552-4e5f-94f7-30d4b84077e3",
+      "example": false,
+      "tool_calls": [],
+      "invalid_tool_calls": [],
+      "usage_metadata": null,
+      "tool_call_chunks": []
+    },
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 4,
+      "langgraph_node": "agent",
+      "langgraph_triggers": [
+        "start:agent"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "agent"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47|1|agent:afbbfb58-987c-ba6b-2b8e-d49696d3a81b",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "ls_provider": "google_vertexai",
+      "ls_model_name": "gemini-2.0-flash-001",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1
+    }
+  ],
+  [
+    {
+      "content": "",
+      "additional_kwargs": {
+        "function_call": {
+          "name": "skim_products",
+          "arguments": "{\"search_term\": \"\\u0e40\\u0e04\\u0e23\\u0e37\\u0e48\\u0e2d\\u0e07\\u0e1f\\u0e2d\\u0e01\\u0e2d\\u0e32\\u0e01\\u0e32\\u0e28\"}"
+        }
+      },
+      "response_metadata": {
+        "safety_ratings": [],
+        "usage_metadata": {},
+        "finish_reason": "STOP"
+      },
+      "type": "AIMessageChunk",
+      "name": null,
+      "id": "run-c7040d28-6552-4e5f-94f7-30d4b84077e3",
+      "example": false,
+      "tool_calls": [
+        {
+          "name": "skim_products",
+          "args": {
+            "search_term": "เครื่องฟอกอากาศ"
+          },
+          "id": "f5bc6453-1d05-4b9d-ac4e-572013e64229",
+          "type": "tool_call"
+        }
+      ],
+      "invalid_tool_calls": [],
+      "usage_metadata": {
+        "input_tokens": 4590,
+        "output_tokens": 12,
+        "total_tokens": 4602
+      },
+      "tool_call_chunks": [
+        {
+          "name": "skim_products",
+          "args": "{\"search_term\": \"\\u0e40\\u0e04\\u0e23\\u0e37\\u0e48\\u0e2d\\u0e07\\u0e1f\\u0e2d\\u0e01\\u0e2d\\u0e32\\u0e01\\u0e32\\u0e28\"}",
+          "id": "f5bc6453-1d05-4b9d-ac4e-572013e64229",
+          "index": null,
+          "type": "tool_call_chunk"
+        }
+      ]
+    },
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 4,
+      "langgraph_node": "agent",
+      "langgraph_triggers": [
+        "start:agent"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "agent"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47|1|agent:afbbfb58-987c-ba6b-2b8e-d49696d3a81b",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "ls_provider": "google_vertexai",
+      "ls_model_name": "gemini-2.0-flash-001",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1
+    }
+  ],
+  [
+    {
+      "content": "Error: ConnectionError(MaxRetryError(\"HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /api/scgh/products?name=%E0%B9%80%E0%B8%84%E0%B8%A3%E0%B8%B7%E0%B9%88%E0%B8%AD%E0%B8%87%E0%B8%9F%E0%B8%AD%E0%B8%81%E0%B8%AD%E0%B8%B2%E0%B8%81%E0%B8%B2%E0%B8%A8&limit=40 (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000244062652B0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))\"))\n Please fix your mistakes.",
+      "additional_kwargs": {},
+      "response_metadata": {},
+      "type": "tool",
+      "name": "skim_products",
+      "id": "75f51915-a5ed-4d2b-86e3-25a652629a69",
+      "tool_call_id": "f5bc6453-1d05-4b9d-ac4e-572013e64229",
+      "artifact": null,
+      "status": "error"
+    },
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 5,
+      "langgraph_node": "tools",
+      "langgraph_triggers": [
+        "branch:agent:should_continue:tools"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "tools"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47|1|tools:6ebfd10d-b4b2-9918-799a-957d73791f11",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47"
+    }
+  ],
+  [
+    {
+      "content": "ขอ",
+      "additional_kwargs": {},
+      "response_metadata": {
+        "safety_ratings": [],
+        "usage_metadata": {}
+      },
+      "type": "AIMessageChunk",
+      "name": null,
+      "id": "run-f7ffde5e-2c38-48b7-b44f-6d8ba8c051a2",
+      "example": false,
+      "tool_calls": [],
+      "invalid_tool_calls": [],
+      "usage_metadata": null,
+      "tool_call_chunks": []
+    },
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 6,
+      "langgraph_node": "agent",
+      "langgraph_triggers": [
+        "tools"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "agent"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47|1|agent:ea4c445e-2937-053c-ee33-bd8fb598b3f5",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "ls_provider": "google_vertexai",
+      "ls_model_name": "gemini-2.0-flash-001",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1
+    }
+  ],
+  [
+    {
+      "content": "อภัยครับคุณลูกค้า ดูเหมือนว่าตอนนี้บ๊อบบี๊ยังไม่สามารถเข้า",
+      "additional_kwargs": {},
+      "response_metadata": {
+        "safety_ratings": [],
+        "usage_metadata": {}
+      },
+      "type": "AIMessageChunk",
+      "name": null,
+      "id": "run-f7ffde5e-2c38-48b7-b44f-6d8ba8c051a2",
+      "example": false,
+      "tool_calls": [],
+      "invalid_tool_calls": [],
+      "usage_metadata": null,
+      "tool_call_chunks": []
+    },
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 6,
+      "langgraph_node": "agent",
+      "langgraph_triggers": [
+        "tools"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "agent"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47|1|agent:ea4c445e-2937-053c-ee33-bd8fb598b3f5",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "ls_provider": "google_vertexai",
+      "ls_model_name": "gemini-2.0-flash-001",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1
+    }
+  ],
+  [
+    {
+      "content": "ถึงข้อมูลสินค้าได้เลยครับ แต่ไม่ต้องกังวลนะครับ บ๊อบบี๊",
+      "additional_kwargs": {},
+      "response_metadata": {
+        "safety_ratings": [],
+        "usage_metadata": {}
+      },
+      "type": "AIMessageChunk",
+      "name": null,
+      "id": "run-f7ffde5e-2c38-48b7-b44f-6d8ba8c051a2",
+      "example": false,
+      "tool_calls": [],
+      "invalid_tool_calls": [],
+      "usage_metadata": null,
+      "tool_call_chunks": []
+    },
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 6,
+      "langgraph_node": "agent",
+      "langgraph_triggers": [
+        "tools"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "agent"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47|1|agent:ea4c445e-2937-053c-ee33-bd8fb598b3f5",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "ls_provider": "google_vertexai",
+      "ls_model_name": "gemini-2.0-flash-001",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1
+    }
+  ],
+  [
+    {
+      "content": "จะพยายามค้นหาข้อมูลจากแหล่งอื่น ๆ ให้อีกทีนะครับ\n",
+      "additional_kwargs": {},
+      "response_metadata": {
+        "safety_ratings": [],
+        "usage_metadata": {}
+      },
+      "type": "AIMessageChunk",
+      "name": null,
+      "id": "run-f7ffde5e-2c38-48b7-b44f-6d8ba8c051a2",
+      "example": false,
+      "tool_calls": [],
+      "invalid_tool_calls": [],
+      "usage_metadata": null,
+      "tool_call_chunks": []
+    },
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 6,
+      "langgraph_node": "agent",
+      "langgraph_triggers": [
+        "tools"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "agent"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47|1|agent:ea4c445e-2937-053c-ee33-bd8fb598b3f5",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "ls_provider": "google_vertexai",
+      "ls_model_name": "gemini-2.0-flash-001",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1
+    }
+  ],
+  [
+    {
+      "content": "",
+      "additional_kwargs": {
+        "function_call": {
+          "name": "get_knowledge_about_product",
+          "arguments": "{\"material\": {\"sub_category\": [\"\\u0e40\\u0e04\\u0e23\\u0e37\\u0e48\\u0e2d\\u0e07\\u0e43\\u0e0a\\u0e49\\u0e44\\u0e1f\\u0e1f\\u0e49\\u0e32\\u0e41\\u0e25\\u0e30\\u0e2d\\u0e38\\u0e1b\\u0e01\\u0e23\\u0e13\\u0e4c\\u0e43\\u0e19\\u0e04\\u0e23\\u0e31\\u0e27\"]}}"
+        }
+      },
+      "response_metadata": {
+        "safety_ratings": [],
+        "usage_metadata": {},
+        "finish_reason": "STOP"
+      },
+      "type": "AIMessageChunk",
+      "name": null,
+      "id": "run-f7ffde5e-2c38-48b7-b44f-6d8ba8c051a2",
+      "example": false,
+      "tool_calls": [
+        {
+          "name": "get_knowledge_about_product",
+          "args": {
+            "material": {
+              "sub_category": [
+                "เครื่องใช้ไฟฟ้าและอุปกรณ์ในครัว"
+              ]
+            }
+          },
+          "id": "0afcbec3-94af-4364-ada5-84fe19037187",
+          "type": "tool_call"
+        }
+      ],
+      "invalid_tool_calls": [],
+      "usage_metadata": {
+        "input_tokens": 4856,
+        "output_tokens": 79,
+        "total_tokens": 4935
+      },
+      "tool_call_chunks": [
+        {
+          "name": "get_knowledge_about_product",
+          "args": "{\"material\": {\"sub_category\": [\"\\u0e40\\u0e04\\u0e23\\u0e37\\u0e48\\u0e2d\\u0e07\\u0e43\\u0e0a\\u0e49\\u0e44\\u0e1f\\u0e1f\\u0e49\\u0e32\\u0e41\\u0e25\\u0e30\\u0e2d\\u0e38\\u0e1b\\u0e01\\u0e23\\u0e13\\u0e4c\\u0e43\\u0e19\\u0e04\\u0e23\\u0e31\\u0e27\"]}}",
+          "id": "0afcbec3-94af-4364-ada5-84fe19037187",
+          "index": null,
+          "type": "tool_call_chunk"
+        }
+      ]
+    },
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 6,
+      "langgraph_node": "agent",
+      "langgraph_triggers": [
+        "tools"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "agent"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47|1|agent:ea4c445e-2937-053c-ee33-bd8fb598b3f5",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "ls_provider": "google_vertexai",
+      "ls_model_name": "gemini-2.0-flash-001",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1
+    }
+  ],
+  [
+    {
+      "content": "Knowledge for เครื่องใช้ไฟฟ้าและอุปกรณ์ในครัว is not available\n\n",
+      "additional_kwargs": {},
+      "response_metadata": {},
+      "type": "tool",
+      "name": "get_knowledge_about_product",
+      "id": "dc15a43e-69dd-4544-b6bf-a5cb24e75fff",
+      "tool_call_id": "0afcbec3-94af-4364-ada5-84fe19037187",
+      "artifact": null,
+      "status": "success"
+    },
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 7,
+      "langgraph_node": "tools",
+      "langgraph_triggers": [
+        "branch:agent:should_continue:tools"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "tools"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47|1|tools:993c39a0-aef0-bb01-2199-1cf2f9e63424",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47"
+    }
+  ],
+  [
+    {
+      "content": "โ",
+      "additional_kwargs": {},
+      "response_metadata": {
+        "safety_ratings": [],
+        "usage_metadata": {}
+      },
+      "type": "AIMessageChunk",
+      "name": null,
+      "id": "run-0c76b644-bec6-4d47-a74f-6c87e59fb631",
+      "example": false,
+      "tool_calls": [],
+      "invalid_tool_calls": [],
+      "usage_metadata": null,
+      "tool_call_chunks": []
+    },
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 8,
+      "langgraph_node": "agent",
+      "langgraph_triggers": [
+        "tools"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "agent"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47|1|agent:85bac5fa-62b2-e0f8-532d-d7841b017066",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "ls_provider": "google_vertexai",
+      "ls_model_name": "gemini-2.0-flash-001",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1
+    }
+  ],
+  [
+    {
+      "content": "บ๊อบบี๊ขออภัยครับคุณลูกค้า ตอนนี้บ๊อบบี๊ย",
+      "additional_kwargs": {},
+      "response_metadata": {
+        "safety_ratings": [],
+        "usage_metadata": {}
+      },
+      "type": "AIMessageChunk",
+      "name": null,
+      "id": "run-0c76b644-bec6-4d47-a74f-6c87e59fb631",
+      "example": false,
+      "tool_calls": [],
+      "invalid_tool_calls": [],
+      "usage_metadata": null,
+      "tool_call_chunks": []
+    },
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 8,
+      "langgraph_node": "agent",
+      "langgraph_triggers": [
+        "tools"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "agent"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47|1|agent:85bac5fa-62b2-e0f8-532d-d7841b017066",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "ls_provider": "google_vertexai",
+      "ls_model_name": "gemini-2.0-flash-001",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1
+    }
+  ],
+  [
+    {
+      "content": "ังไม่พบข้อมูลเกี่ยวกับเครื่องฟอกอากาศเลยครับ คุณลูกค้าอยากให้บ๊อบ",
+      "additional_kwargs": {},
+      "response_metadata": {
+        "safety_ratings": [],
+        "usage_metadata": {}
+      },
+      "type": "AIMessageChunk",
+      "name": null,
+      "id": "run-0c76b644-bec6-4d47-a74f-6c87e59fb631",
+      "example": false,
+      "tool_calls": [],
+      "invalid_tool_calls": [],
+      "usage_metadata": null,
+      "tool_call_chunks": []
+    },
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 8,
+      "langgraph_node": "agent",
+      "langgraph_triggers": [
+        "tools"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "agent"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47|1|agent:85bac5fa-62b2-e0f8-532d-d7841b017066",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "ls_provider": "google_vertexai",
+      "ls_model_name": "gemini-2.0-flash-001",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1
+    }
+  ],
+  [
+    {
+      "content": "มี่ลองค้นหาข้อมูลเพิ่มเติมจากแหล่งอื่น ๆ ให้ไหมครับ\n",
+      "additional_kwargs": {},
+      "response_metadata": {
+        "safety_ratings": [],
+        "usage_metadata": {}
+      },
+      "type": "AIMessageChunk",
+      "name": null,
+      "id": "run-0c76b644-bec6-4d47-a74f-6c87e59fb631",
+      "example": false,
+      "tool_calls": [],
+      "invalid_tool_calls": [],
+      "usage_metadata": null,
+      "tool_call_chunks": []
+    },
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 8,
+      "langgraph_node": "agent",
+      "langgraph_triggers": [
+        "tools"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "agent"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47|1|agent:85bac5fa-62b2-e0f8-532d-d7841b017066",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "ls_provider": "google_vertexai",
+      "ls_model_name": "gemini-2.0-flash-001",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1
+    }
+  ],
+  [
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 8,
+      "langgraph_node": "agent",
+      "langgraph_triggers": [
+        "tools"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "agent"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47|1|agent:85bac5fa-62b2-e0f8-532d-d7841b017066",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "ls_provider": "google_vertexai",
+      "ls_model_name": "gemini-2.0-flash-001",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1
+    }
+  ],
+  [
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 9,
+      "langgraph_node": "tools",
+      "langgraph_triggers": [
+        "branch:agent:should_continue:tools"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "tools"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47|1|tools:d0a0915f-7b3f-a459-4ff5-93f2bb48cc4c",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47"
+    }
+  ],
+  [
+    {
+      "content": "ขอ",
+      "additional_kwargs": {},
+      "response_metadata": {
+        "safety_ratings": [],
+        "usage_metadata": {}
+      },
+      "type": "AIMessageChunk",
+      "name": null,
+      "id": "run-9453aeb8-4c52-4d51-a45a-a4d7eea29785",
+      "example": false,
+      "tool_calls": [],
+      "invalid_tool_calls": [],
+      "usage_metadata": null,
+      "tool_call_chunks": []
+    },
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 10,
+      "langgraph_node": "agent",
+      "langgraph_triggers": [
+        "tools"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "agent"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47|1|agent:309992a4-a18f-1d13-f43d-0f403ea7e495",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "ls_provider": "google_vertexai",
+      "ls_model_name": "gemini-2.0-flash-001",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1
+    }
+  ],
+  [
+    {
+      "content": "อภัยครับคุณลูกค้า เกิดข้อผิดพลาดในการเชื่อมต่อระบบอีกครั้ง โ",
+      "additional_kwargs": {},
+      "response_metadata": {
+        "safety_ratings": [],
+        "usage_metadata": {}
+      },
+      "type": "AIMessageChunk",
+      "name": null,
+      "id": "run-9453aeb8-4c52-4d51-a45a-a4d7eea29785",
+      "example": false,
+      "tool_calls": [],
+      "invalid_tool_calls": [],
+      "usage_metadata": null,
+      "tool_call_chunks": []
+    },
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 10,
+      "langgraph_node": "agent",
+      "langgraph_triggers": [
+        "tools"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "agent"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47|1|agent:309992a4-a18f-1d13-f43d-0f403ea7e495",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "ls_provider": "google_vertexai",
+      "ls_model_name": "gemini-2.0-flash-001",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1
+    }
+  ],
+  [
+    {
+      "content": "บ๊อบบี๊ไม่สามารถค้นหาข้อมูลเกี่ยวกับเครื่องฟอกอากาศได้เลยครับใน",
+      "additional_kwargs": {},
+      "response_metadata": {
+        "safety_ratings": [],
+        "usage_metadata": {}
+      },
+      "type": "AIMessageChunk",
+      "name": null,
+      "id": "run-9453aeb8-4c52-4d51-a45a-a4d7eea29785",
+      "example": false,
+      "tool_calls": [],
+      "invalid_tool_calls": [],
+      "usage_metadata": null,
+      "tool_call_chunks": []
+    },
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 10,
+      "langgraph_node": "agent",
+      "langgraph_triggers": [
+        "tools"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "agent"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47|1|agent:309992a4-a18f-1d13-f43d-0f403ea7e495",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "ls_provider": "google_vertexai",
+      "ls_model_name": "gemini-2.0-flash-001",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1
+    }
+  ],
+  [
+    {
+      "content": "ขณะนี้ คุณลูกค้าสะดวกให้บ๊อบบี๊ติดต่อพี่ๆ เจ้าหน้าที่ SCG Digital ONLINE ให้ช่วยดูแลไหมครับ",
+      "additional_kwargs": {},
+      "response_metadata": {
+        "safety_ratings": [],
+        "usage_metadata": {},
+        "finish_reason": "STOP"
+      },
+      "type": "AIMessageChunk",
+      "name": null,
+      "id": "run-9453aeb8-4c52-4d51-a45a-a4d7eea29785",
+      "example": false,
+      "tool_calls": [],
+      "invalid_tool_calls": [],
+      "usage_metadata": {
+        "input_tokens": 5272,
+        "output_tokens": 73,
+        "total_tokens": 5345
+      },
+      "tool_call_chunks": []
+    },
+    {
+      "thread_id": "067c17be-65cb-734b-8000-d49ea9ea47ea",
+      "username": "Kem",
+      "langgraph_step": 10,
+      "langgraph_node": "agent",
+      "langgraph_triggers": [
+        "tools"
+      ],
+      "langgraph_path": [
+        "__pregel_pull",
+        "agent"
+      ],
+      "langgraph_checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47|1|agent:309992a4-a18f-1d13-f43d-0f403ea7e495",
+      "checkpoint_ns": "agent:a2006b74-bd5d-9c0d-5f6c-dfb295283d47",
+      "ls_provider": "google_vertexai",
+      "ls_model_name": "gemini-2.0-flash-001",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1
+    }
+  ]
+]

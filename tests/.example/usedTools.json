@@ -1,0 +1,18 @@
+[
+  {
+    "id": "f5bc6453-1d05-4b9d-ac4e-572013e64229",
+    "tool": "skim_products",
+    "toolInput": {
+      "search_term": "เครื่องฟอกอากาศ"
+    },
+    "toolOutput": "Error: ConnectionError(MaxRetryError(\"HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /api/scgh/products?name=%E0%B9%80%E0%B8%84%E0%B8%A3%E0%B8%B7%E0%B9%88%E0%B8%AD%E0%B8%87%E0%B8%9F%E0%B8%AD%E0%B8%81%E0%B8%AD%E0%B8%B2%E0%B8%81%E0%B8%B2%E0%B8%A8&limit=40 (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000244062652B0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))\"))\n Please fix your mistakes."
+  },
+  {
+    "id": "f5bc6453-1d05-4b9d-ac4e-572013e64229",
+    "tool": "skim_products",
+    "toolInput": {
+      "search_term": "เครื่องฟอกอากาศ"
+    },
+    "toolOutput": "Error: ConnectionError(MaxRetryError(\"HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /api/scgh/products?name=%E0%B9%80%E0%B8%84%E0%B8%A3%E0%B8%B7%E0%B9%88%E0%B8%AD%E0%B8%87%E0%B8%9F%E0%B8%AD%E0%B8%81%E0%B8%AD%E0%B8%B2%E0%B8%81%E0%B8%B2%E0%B8%A8&limit=40 (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000244062652B0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))\"))\n Please fix your mistakes."
+  }
+]

@@ -1,0 +1,59 @@
+name: "Helm Chart Updater"
+description: "Updates Helm chart values file with a new image tag and pushes changes"
+inputs:
+  helm-path:
+    description: "Path to the Helm chart directory"
+    required: true
+  helm-value-file:
+    description: "Helm values file to update"
+    required: true
+  deploy-repo:
+    description: "Repository with Helm chart"
+    required: true
+  deploy-branch:
+    description: "Branch of the deploy repository"
+    required: true
+  gh-token:
+    description: "GitHub token for authentication"
+    required: true
+  image-tag:
+    description: "New image tag to set in values file"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v4
+      name: GitOps - Checkout
+      with:
+        repository: ${{ inputs.deploy-repo }}
+        token: ${{ inputs.gh-token }}
+        ref: ${{ inputs.deploy-branch }}
+        path: "./deploy-repo"
+
+    - name: Update Helm Chart
+      shell: bash
+      run: |
+        # Navigate to Helm chart directory
+        cd ./deploy-repo/${{ inputs.helm-path }}
+
+        # Update image tag in values file
+        echo "Updating image tag to ${{ inputs.image-tag }} in ${{ inputs.helm-value-file }}"
+        yq e ".image.tag = \"${{ inputs.image-tag }}\"" -i "${{ inputs.helm-value-file }}"
+
+        # Configure git and commit changes
+        git config user.name "${{ github.actor }}"
+        git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
+        git add ${{ inputs.helm-value-file }}
+
+        # Check if there are changes to commit
+        if [[ -n "$(git status --porcelain)" ]]; then
+          # Commit and push changes
+          COMMIT_DATE=$(date)
+          git commit -m "[argocd] Update image tag to ${{ inputs.image-tag }} on $COMMIT_DATE"
+          git push origin ${{ inputs.deploy-branch }}
+          echo "Changes committed and pushed to ${{ inputs.deploy-branch }}"
+        else
+          echo "ERROR: No changes were made to the values file. Deployment aborted."
+          exit 1
+        fi

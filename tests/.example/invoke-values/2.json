@@ -1,0 +1,127 @@
+{
+  "messages": [
+    {
+      "content": "มีเครื่องฟอกอากาศขายไหมราคาเท่าไหร่",
+      "additional_kwargs": {},
+      "response_metadata": {},
+      "type": "human",
+      "name": null,
+      "id": "580d9369-f212-4fc5-b281-dbf2591decee",
+      "example": false
+    },
+    {
+      "content": "สวัสดีครับคุณลูกค้า บ๊อบบี๊เองครับ ยินดีช่วยเหลือครับ\n\nเดี๋ยวบ๊อบบี๊ขอค้นหาข้อมูลเครื่องฟอกอากาศให้คุณลูกค้าก่อนนะครับ\n",
+      "additional_kwargs": {
+        "function_call": {
+          "name": "skim_products",
+          "arguments": "{\"search_term\": \"\\u0e40\\u0e04\\u0e23\\u0e37\\u0e48\\u0e2d\\u0e07\\u0e1f\\u0e2d\\u0e01\\u0e2d\\u0e32\\u0e01\\u0e32\\u0e28\"}"
+        }
+      },
+      "response_metadata": {
+        "safety_ratings": [],
+        "usage_metadata": {},
+        "finish_reason": "STOP"
+      },
+      "type": "ai",
+      "name": null,
+      "id": "run-12772b91-e757-475f-b981-990cebc079c9",
+      "example": false,
+      "tool_calls": [
+        {
+          "name": "skim_products",
+          "args": {
+            "search_term": "เครื่องฟอกอากาศ"
+          },
+          "id": "4c18eebc-78d2-42c7-b861-65d06fa4dbc6",
+          "type": "tool_call"
+        }
+      ],
+      "invalid_tool_calls": [],
+      "usage_metadata": {
+        "input_tokens": 4526,
+        "output_tokens": 58,
+        "total_tokens": 4584
+      }
+    },
+    {
+      "content": "Error: ConnectionError(MaxRetryError(\"HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /api/scgh/products?name=%E0%B9%80%E0%B8%84%E0%B8%A3%E0%B8%B7%E0%B9%88%E0%B8%AD%E0%B8%87%E0%B8%9F%E0%B8%AD%E0%B8%81%E0%B8%AD%E0%B8%B2%E0%B8%81%E0%B8%B2%E0%B8%A8&limit=40 (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000016190C22630>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))\"))\n Please fix your mistakes.",
+      "additional_kwargs": {},
+      "response_metadata": {},
+      "type": "tool",
+      "name": "skim_products",
+      "id": "e49a0bac-4a6b-455d-8189-9ee66f7b2dd5",
+      "tool_call_id": "4c18eebc-78d2-42c7-b861-65d06fa4dbc6",
+      "artifact": null,
+      "status": "error"
+    },
+    {
+      "content": "ขออภัยครับคุณลูกค้า ดูเหมือนว่าระบบของบ๊อบบี๊มีปัญหาเล็กน้อยในการค้นหาข้อมูลตอนนี้ แต่ไม่ต้องกังวลนะครับ บ๊อบบี๊จะลองค้นหาให้อีกครั้งครับ\n",
+      "additional_kwargs": {
+        "function_call": {
+          "name": "get_knowledge_about_product",
+          "arguments": "{\"material\": {\"sub_category\": [\"\\u0e40\\u0e04\\u0e23\\u0e37\\u0e48\\u0e2d\\u0e07\\u0e43\\u0e0a\\u0e49\\u0e44\\u0e1f\\u0e1f\\u0e49\\u0e32\\u0e41\\u0e25\\u0e30\\u0e2d\\u0e38\\u0e1b\\u0e01\\u0e23\\u0e13\\u0e4c\\u0e43\\u0e19\\u0e04\\u0e23\\u0e31\\u0e27\"]}}"
+        }
+      },
+      "response_metadata": {
+        "safety_ratings": [],
+        "usage_metadata": {},
+        "finish_reason": "STOP"
+      },
+      "type": "ai",
+      "name": null,
+      "id": "run-a9e271a0-dbec-4cb2-a550-16908b004850",
+      "example": false,
+      "tool_calls": [
+        {
+          "name": "get_knowledge_about_product",
+          "args": {
+            "material": {
+              "sub_category": [
+                "เครื่องใช้ไฟฟ้าและอุปกรณ์ในครัว"
+              ]
+            }
+          },
+          "id": "47ef90d9-ee1e-49a0-aaa0-59a3898b9e92",
+          "type": "tool_call"
+        }
+      ],
+      "invalid_tool_calls": [],
+      "usage_metadata": {
+        "input_tokens": 4838,
+        "output_tokens": 72,
+        "total_tokens": 4910
+      }
+    },
+    {
+      "content": "Knowledge for เครื่องใช้ไฟฟ้าและอุปกรณ์ในครัว is not available\n\n",
+      "additional_kwargs": {},
+      "response_metadata": {},
+      "type": "tool",
+      "name": "get_knowledge_about_product",
+      "id": "5b58e4d8-b423-4417-9aaf-76e11aeac7c4",
+      "tool_call_id": "47ef90d9-ee1e-49a0-aaa0-59a3898b9e92",
+      "artifact": null,
+      "status": "success"
+    },
+    {
+      "content": "ขออภัยครับคุณลูกค้า ดูเหมือนว่าบ๊อบบี๊ยังไม่สามารถค้นหาข้อมูลเกี่ยวกับเครื่องฟอกอากาศได้เลยครับ อาจจะเป็นเพราะระบบขัดข้องชั่วคราวนะครับ\n\nคุณลูกค้าสะดวกให้บ๊อบบี๊ลองค้นหาข้อมูลให้อีกครั้งไหมครับ หรือว่าอยากจะให้บ๊อบบี๊ติดต่อพี่ๆ เจ้าหน้าที่ SCG Digital ONLINE ให้ช่วยดูแลแทนครับ",
+      "additional_kwargs": {},
+      "response_metadata": {
+        "safety_ratings": [],
+        "usage_metadata": {},
+        "finish_reason": "STOP"
+      },
+      "type": "ai",
+      "name": null,
+      "id": "run-d7289131-5ac5-4a15-ac07-c6be1b6eb641",
+      "example": false,
+      "tool_calls": [],
+      "invalid_tool_calls": [],
+      "usage_metadata": {
+        "input_tokens": 5192,
+        "output_tokens": 96,
+        "total_tokens": 5288
+      }
+    }
+  ]
+}

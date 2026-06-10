@@ -1,0 +1,166 @@
+name: Build&Run
+
+on:
+  workflow_dispatch:
+    inputs:
+      env:
+        description: "env name"
+        required: true
+        default: "dev"
+        type: "choice"
+        options:
+          - "dev"
+          - "uat"
+          - "prod"
+
+jobs:
+  secret-detection:
+    runs-on: ubuntu-24.04
+    if: ${{ github.event.inputs.env == 'dev' }}
+    steps:
+      - name: Checkout code 🛬
+        uses: actions/checkout@v4
+      - name: Set up Python 🐍
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Secret Scanner 🔍
+        uses: secret-scanner/action@0.2.1
+
+  build:
+    runs-on: nlp
+    permissions:
+      id-token: write
+      contents: read
+    environment:
+      name: ${{ github.event.inputs.env }}
+    env:
+      AWS_REGION: ${{ vars.AWS_REGION }}
+      ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
+      REGISTRY: ${{ vars.REGISTRY }} # aws : do-common-ai-platform
+      AWS_ASSUME_ROLE_ARN: ${{ vars.AWS_ASSUME_ROLE_ARN }}
+      ENV_PREFIX: ${{ github.event.inputs.env }}
+
+    steps:
+      - name: Checkout repository 🛬
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials ☁️
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ASSUME_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Login to Amazon ECR 🔑
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set up Docker Buildx 🐳
+        uses: docker/setup-buildx-action@v1
+
+      - name: Create cache directory 📁
+        run: mkdir -p /tmp/.buildx-cache
+
+      - name: Set up Docker Buildx cache 💾
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ hashFiles('package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Extract environment prefix and update version 🔍
+        if: ${{ github.ref_type == 'tag' }}
+        run: |
+          # Get tag name from GitHub reference
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          echo "Detected tag: $TAG_NAME"
+          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
+
+          # Update version in package.json
+          if [ -f "package.json" ]; then
+            echo "Updating version in package.json to $TAG_NAME"
+            # Use sed to replace version = "0.0" with version = "$TAG_NAME"
+            sed -i 's/"version": "[^"]*"/"version": "'$TAG_NAME'"/' package.json
+          else
+            echo "package.json not found, skipping version update"
+          fi
+          sed -i 's/"run_number": "[^"]*"/"run_number": "${{ github.run_number }}"/' package.json
+
+      - name: Authenticate with GitHub Container Registry 🔑
+        run: echo ${{ secrets.PAT_TOKEN_DEPLOY }} | docker login ghcr.io -u ${{ secrets.PAT_TOKEN_USER }} --password-stdin
+
+      - name: Build, tag, and push docker image to Amazon ECR
+        env:
+          IMAGE_TAG: ${{ github.event.inputs.env }}-${{ github.run_number }}
+        run: |
+          # Build with pre-installed packages and cache
+          docker buildx build \
+            --label "org.opencontainers.image.source=https://github.com/${{ github.repository }}" \
+            --label "org.opencontainers.image.description=Agentic AI" \
+            --platform linux/amd64,linux/arm64 \
+            --cache-from type=local,src=/tmp/.buildx-cache \
+            --cache-to type=local,dest=/tmp/.buildx-cache-new,mode=max \
+            --tag $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
+            $(if [ "${{ github.event.inputs.env }}" == "uat" ]; then echo "--tag ghcr.io/${{ github.repository }}:$TAG_NAME --tag ghcr.io/${{ github.repository }}:latest"; fi) \
+            -f Dockerfile . \
+            --push
+
+  helm-upgrade:
+    needs: build
+    runs-on: scghome
+    environment:
+      name: ${{ github.event.inputs.env }}
+    steps:
+      - name: Checkout repository 🛬
+        uses: actions/checkout@v4
+
+      - name: Update Helm Chart ⚓
+        uses: ./.github/actions/helm-upgrade
+        with:
+          helm-path: ${{ vars.HELM_PATH }}
+          helm-value-file: values-${{ github.event.inputs.env }}.yaml
+          deploy-repo: ${{ vars.DEPLOY_REPO }}
+          deploy-branch: ${{ vars.DEPLOY_BRANCH }}
+          gh-token: ${{ secrets.GH_TOKEN }}
+          image-tag: ${{ github.event.inputs.env }}-${{ github.run_number }}
+
+      - name: Generate Helm Upgrade Summary 📊
+        if: ${{ github.event.inputs.env == 'prod' }}
+        uses: ./.github/actions/generate-summary
+        with:
+          env: ${{ github.event.inputs.env }}
+          run_number: ${{ github.run_number }}
+          argocd_server: ${{ vars.ARGOCD_SERVER }}
+          argocd_app_name: ${{ vars.ARGOCD_APP_NAME }}
+
+  sync:
+    needs: helm-upgrade
+    runs-on: scghome
+    if: ${{ github.event.inputs.env != 'prod' }}
+    environment:
+      name: ${{ github.event.inputs.env }}
+
+    steps:
+      - name: Checkout repository 🛬
+        uses: actions/checkout@v4
+
+      - name: ArgoCD Sync 🔄
+        id: argo-sync
+        uses: ./.github/actions/argo-sync
+        with:
+          argocd-server: ${{ vars.ARGOCD_SERVER }}
+          argocd-app-name: ${{ vars.ARGOCD_APP_NAME }}
+          argocd-auth-token: ${{ secrets.ARGOCD_AUTH_TOKEN }}
+          max-sync-attempts: 60
+          sync-check-interval: 10
+
+      - name: Generate Sync Summary 📝
+        uses: ./.github/actions/generate-summary
+        with:
+          env: ${{ github.event.inputs.env }}
+          run_number: ${{ github.run_number }}
+          argocd_server: ${{ vars.ARGOCD_SERVER }}
+          argocd_app_name: ${{ vars.ARGOCD_APP_NAME }}
+          sync_status: ${{ steps.argo-sync.outputs.sync_status || 'Unknown' }}
+          health_status: ${{ steps.argo-sync.outputs.health_status || 'Unknown' }}

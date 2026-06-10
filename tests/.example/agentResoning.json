@@ -1,0 +1,42 @@
+[
+  {
+    "agentName": "agent",
+    "messages": [
+      "สวัสดีครับคุณลูกค้า บ๊อบบี๊เองครับ ยินดีช่วยเหลือครับ\n\nเดี๋ยวบ๊อบบี๊ขอค้นหาข้อมูลเครื่องฟอกอากาศให้คุณลูกค้าก่อนนะครับ\n"
+    ],
+    "usedTools": [],
+    "sourceDocuments": [],
+    "state": {},
+    "nodeId": "run-64e76efd-d2ec-4979-ad77-e82d5cfbca37",
+    "meta": {
+      "ls_provider": "google_vertexai",
+      "ls_model_name": "gemini-2.0-flash-001",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1
+    }
+  },
+  {
+    "agentName": "skim_products",
+    "messages": [
+      "Error: ConnectionError(MaxRetryError(\"HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /api/scgh/products?name=%E0%B9%80%E0%B8%84%E0%B8%A3%E0%B8%B7%E0%B9%88%E0%B8%AD%E0%B8%87%E0%B8%9F%E0%B8%AD%E0%B8%81%E0%B8%AD%E0%B8%B2%E0%B8%81%E0%B8%B2%E0%B8%A8&limit=40 (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000244062652B0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))\"))\n Please fix your mistakes."
+    ],
+    "usedTools": [
+      {
+        "tool": "skim_products",
+        "toolInput": {
+          "search_term": "เครื่องฟอกอากาศ"
+        },
+        "toolOutput": "Error: ConnectionError(MaxRetryError(\"HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /api/scgh/products?name=%E0%B9%80%E0%B8%84%E0%B8%A3%E0%B8%B7%E0%B9%88%E0%B8%AD%E0%B8%87%E0%B8%9F%E0%B8%AD%E0%B8%81%E0%B8%AD%E0%B8%B2%E0%B8%81%E0%B8%B2%E0%B8%A8&limit=40 (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000244062652B0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))\"))\n Please fix your mistakes."
+      }
+    ],
+    "sourceDocuments": [],
+    "state": {},
+    "nodeId": "run-12772b91-e757-475f-b981-990cebc079c",
+    "meta": {
+      "ls_provider": "google_vertexai",
+      "ls_model_name": "gemini-2.0-flash-001",
+      "ls_model_type": "chat",
+      "ls_temperature": 0.1
+    }
+  }
+]

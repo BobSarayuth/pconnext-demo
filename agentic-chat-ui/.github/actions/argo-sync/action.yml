@@ -1,0 +1,96 @@
+name: "ArgoCD Sync"
+description: "Triggers ArgoCD sync and waits for completion"
+inputs:
+  argocd-server:
+    description: "ArgoCD Server URL"
+    required: true
+  argocd-app-name:
+    description: "ArgoCD Application Name"
+    required: true
+  argocd-auth-token:
+    description: "ArgoCD Auth Token"
+    required: true
+  max-sync-attempts:
+    description: "Maximum number of sync attempts"
+    default: "60"
+    required: false
+  sync-check-interval:
+    description: "Interval between sync status checks in seconds"
+    default: "10"
+    required: false
+
+outputs:
+  sync_status:
+    description: "Final sync status of the application"
+    value: ${{ steps.sync-status.outputs.sync_status }}
+  health_status:
+    description: "Final health status of the application"
+    value: ${{ steps.sync-status.outputs.health_status }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Trigger ArgoCD Sync
+      shell: bash
+      run: |
+        echo "Triggering ArgoCD sync for application ${{ inputs.argocd-app-name }}"
+        curl --fail -X POST "${{ inputs.argocd-server }}/api/v1/applications/${{ inputs.argocd-app-name }}/sync" \
+        -H "Authorization: Bearer ${{ inputs.argocd-auth-token }}" \
+        -H "Content-Type: application/json"
+        echo "Sleeping for 5 seconds before checking sync status..."
+        sleep 15
+
+    - name: Wait for ArgoCD Sync
+      id: sync-status
+      shell: bash
+      run: |
+        echo "Waiting for ArgoCD sync to complete..."
+        ATTEMPT=0
+        SYNC_STATUS=""
+        HEALTH_STATUS=""
+        MAX_SYNC_ATTEMPTS=${{ inputs.max-sync-attempts }}
+        SYNC_CHECK_INTERVAL=${{ inputs.sync-check-interval }}
+
+        while [ $ATTEMPT -lt $MAX_SYNC_ATTEMPTS ]; do
+          ATTEMPT=$((ATTEMPT+1))
+          echo "Checking sync status... attempt $ATTEMPT of $MAX_SYNC_ATTEMPTS"
+
+          # Get application status from ArgoCD - fixing potential syntax issues with curl command
+          RESPONSE=$(curl -s -X GET "${{ inputs.argocd-server }}/api/v1/applications/${{ inputs.argocd-app-name }}" \
+                    -H "Authorization: Bearer ${{ inputs.argocd-auth-token }}" \
+                    -H "Content-Type: application/json" || echo '{"status":{"sync":{"status":"Unknown"},"health":{"status":"Unknown"}}}')
+
+          # Add error handling for response parsing
+          if [ -z "$RESPONSE" ]; then
+            echo "Empty response received, using default values"
+            SYNC_STATUS="Unknown"
+            HEALTH_STATUS="Unknown"
+          else
+            SYNC_STATUS=$(echo "$RESPONSE" | jq -r '.status.sync.status // "Unknown"')
+            HEALTH_STATUS=$(echo "$RESPONSE" | jq -r '.status.health.status // "Unknown"')
+          fi
+
+          echo "Current sync status: $SYNC_STATUS, health: $HEALTH_STATUS"
+
+          # Check if sync is completed
+          if [ "$SYNC_STATUS" == "Synced" ] && [ "$HEALTH_STATUS" == "Healthy" ]; then
+            echo "Sync completed successfully and application is healthy!"
+            echo "SYNC_STATUS=$SYNC_STATUS" >> $GITHUB_ENV
+            echo "HEALTH_STATUS=$HEALTH_STATUS" >> $GITHUB_ENV
+            echo "sync_status=$SYNC_STATUS" >> $GITHUB_OUTPUT
+            echo "health_status=$HEALTH_STATUS" >> $GITHUB_OUTPUT
+            break
+          fi
+
+          # Check if maximum attempts reached
+          if [ $ATTEMPT -eq $MAX_SYNC_ATTEMPTS ]; then
+            echo "Reached maximum attempts, sync may not have completed."
+            echo "SYNC_STATUS=$SYNC_STATUS" >> $GITHUB_ENV
+            echo "HEALTH_STATUS=$HEALTH_STATUS" >> $GITHUB_ENV
+            echo "sync_status=$SYNC_STATUS" >> $GITHUB_OUTPUT
+            echo "health_status=$HEALTH_STATUS" >> $GITHUB_OUTPUT
+          else
+            echo "Waiting for $SYNC_CHECK_INTERVAL seconds before checking again..."
+            sleep $SYNC_CHECK_INTERVAL
+          fi
+        done

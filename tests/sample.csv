@@ -1,0 +1,4 @@
+ID,Session,Intent,ActualQuery,ExpectAnswer,ActualAnswer,SimilarPhrase
+1,1,GREETING,สวัสดีค่ะ,ตอบทักทายกลับ,,
+2,2,GREETING,สอบถามหน่อยครับ,ตอบทักทายกลับ,,
+3,3,GREETING,Hi,ตอบทักทายกลับ,,

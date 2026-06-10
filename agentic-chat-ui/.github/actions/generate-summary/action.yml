@@ -1,0 +1,104 @@
+name: "Generate Deployment Summary"
+description: "Generates a deployment summary with ArgoCD status information"
+inputs:
+  env:
+    required: true
+    description: "Environment name (dev/uat/prod)"
+  run_number:
+    required: true
+    description: "GitHub run number to use in image tag"
+  argocd_server:
+    required: true
+    description: "ArgoCD server URL"
+  argocd_app_name:
+    required: true
+    description: "ArgoCD application name"
+  sync_status:
+    required: false
+    default: "N/A"
+    description: "Current sync status from ArgoCD"
+  health_status:
+    required: false
+    default: "N/A"
+    description: "Current health status from ArgoCD"
+outputs:
+  summary:
+    description: "Generated deployment summary markdown"
+    value: ${{ steps.generate-summary.outputs.summary }}
+runs:
+  using: "composite"
+  steps:
+    - name: Generate Summary
+      id: generate-summary
+      shell: bash
+      env:
+        SYNC_STATUS: ${{ inputs.sync_status }}
+        HEALTH_STATUS: ${{ inputs.health_status }}
+        ARGOCD_SERVER: ${{ inputs.argocd_server }}
+        ARGOCD_APP_NAME: ${{ inputs.argocd_app_name }}
+        ENV: ${{ inputs.env }}
+        RUN_NUMBER: ${{ inputs.run_number }}
+      run: |
+        # Generate shields.io badges based on status
+        SYNC_BADGE_COLOR=$([ "$SYNC_STATUS" == "Synced" ] && echo "success" || echo "critical")
+        SYNC_BADGE="https://img.shields.io/badge/Sync-${SYNC_STATUS}-${SYNC_BADGE_COLOR}?style=flat-square"
+
+        HEALTH_BADGE_COLOR="critical"
+        if [ "$HEALTH_STATUS" == "Healthy" ]; then
+          HEALTH_BADGE_COLOR="success"
+        elif [ "$HEALTH_STATUS" == "Progressing" ]; then
+          HEALTH_BADGE_COLOR="yellow"
+        fi
+        HEALTH_BADGE="https://img.shields.io/badge/Health-${HEALTH_STATUS}-${HEALTH_BADGE_COLOR}?style=flat-square"
+
+        echo "# 🚀 Deployment Status" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        if [[ "$ENV" != "prod" ]]; then
+          echo "## 📊 ArgoCD Sync Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "[![Sync Status](${SYNC_BADGE})](${ARGOCD_SERVER}/applications/argocd/${ARGOCD_APP_NAME}) [![Health Status](${HEALTH_BADGE})](${ARGOCD_SERVER}/applications/argocd/${ARGOCD_APP_NAME})" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "## 🔒 Production Deployment" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "> ### ⚠️ **Important Approval Required**" >> $GITHUB_STEP_SUMMARY
+          echo "> " >> $GITHUB_STEP_SUMMARY
+          echo "> This is a **PRODUCTION** deployment. Please ensure you've received proper approval via Microsoft Teams before proceeding." >> $GITHUB_STEP_SUMMARY
+          echo "> " >> $GITHUB_STEP_SUMMARY
+          echo "> <img src=\"https://img.shields.io/badge/Microsoft-Teams-6264A7?style=for-the-badge&logo=microsoft-teams&logoColor=white\" alt=\"Microsoft Teams Approval Required\">" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+        fi
+
+        echo "### 🔍 Deployment Details" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "| Property | Value |" >> $GITHUB_STEP_SUMMARY
+        echo "| --- | --- |" >> $GITHUB_STEP_SUMMARY
+        echo "| **Environment** | \`$ENV\` |" >> $GITHUB_STEP_SUMMARY
+        echo "| **Build Number** | \`$RUN_NUMBER\` |" >> $GITHUB_STEP_SUMMARY
+        echo "| **Image Tag** | \`$ENV-$RUN_NUMBER\` |" >> $GITHUB_STEP_SUMMARY
+        echo "| **Application** | \`${ARGOCD_APP_NAME}\` |" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        if [[ "$ENV" != "prod" ]]; then
+          echo "### 🔗 Quick Links" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "[![View in ArgoCD](https://img.shields.io/badge/View_in-ArgoCD-orange?style=for-the-badge&logo=argo)](${ARGOCD_SERVER}/applications/argocd/${ARGOCD_APP_NAME})" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "$SYNC_STATUS" != "Synced" ] || [ "$HEALTH_STATUS" != "Healthy" ]; then
+            echo "### ⚠️ Attention Required" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "The deployment is not in an optimal state. Please check ArgoCD for details." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "### ✅ Deployment Successful" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "The application has been successfully deployed and is healthy." >> $GITHUB_STEP_SUMMARY
+          fi
+        fi
+
+        # Export summary for use in calling workflows
+        SUMMARY=$(cat $GITHUB_STEP_SUMMARY)
+        echo "summary<<EOF" >> $GITHUB_OUTPUT
+        echo "$SUMMARY" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT

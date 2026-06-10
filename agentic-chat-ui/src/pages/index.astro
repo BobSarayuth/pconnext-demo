@@ -1,0 +1,9 @@
+---
+import Layout from '../layouts/Layout.astro'
+import { requireAuth } from '../utils/auth'
+
+const authRedirect = requireAuth(Astro)
+if (authRedirect) return authRedirect
+---
+
+<Layout />

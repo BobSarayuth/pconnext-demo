@@ -1,0 +1,169 @@
+---
+import { GoogleFontsOptimizer } from 'astro-google-fonts-optimizer'
+import { ClientRouter } from 'astro:transitions'
+import HeaderSticky from '../components/HeaderSticky.svelte'
+import ChatMessage from '../components/ChatMessage.svelte'
+import InputMessage from '../components/InputMessage.svelte'
+import HelpModal from '../components/modals/HelpModal.svelte'
+import consts from '../utils/constraints'
+import '../styles/global.css'
+import 'tippy.js/dist/tippy.css'
+
+const { id, agent } = Astro.props
+
+const isDevelop = import.meta.env.HOST === 'localhost'
+const localBaseUrl = import.meta.env.LOCAL_BASE_URL || ''
+const localInitUrl = import.meta.env.LOCAL_INIT_URL || ''
+const normalizeBasePath = (value = '') => {
+  const basePath = value.trim()
+  if (!basePath || basePath === '/') return ''
+
+  return `/${basePath.replace(/^\/+|\/+$/g, '')}`
+}
+
+const runtimeEnv = globalThis.Bun?.env || {}
+const appBasePath = normalizeBasePath(runtimeEnv.AUTH_BASE_PATH || runtimeEnv.BASE_PATH || import.meta.env.BASE_URL)
+
+const title = 'Agentic Chat'
+---
+
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{title}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <GoogleFontsOptimizer url="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Sarabun:wght@400;700&display=swap" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <ClientRouter />
+  </head>
+  <body class="bg-gray-50 dark:bg-slate-800">
+    <slot />
+    <div id="container" class="opacity-0 flex flex-col h-screen overflow-hidden duration-100 transition-all">
+      <HeaderSticky client:load id={id} agent={agent} />
+      <ChatMessage client:load />
+      <InputMessage client:load id={id} agent={agent} />
+      <HelpModal client:load />
+    </div>
+  </body>
+</html>
+
+<script is:inline define:vars={{ appBasePath, consts, localBaseUrl, localInitUrl }}>
+  const pathJoin = (...parts) => {
+    const path = parts
+      .filter(Boolean)
+      .map((part) => String(part).replace(/^\/+|\/+$/g, ''))
+      .filter(Boolean)
+      .join('/')
+
+    return `/${path}`
+  }
+
+  const getUrl = (agent, id) => `${window.location.origin}${pathJoin(appBasePath, agent, id)}`
+  window.getRouteUrl = getUrl
+
+  window.routeReplaceState = (agent, id) => {
+    window.history.replaceState({}, document.title, getUrl(agent, id))
+  }
+  window.routePushState = (agent, id) => {
+    window.history.pushState({}, document.title, getUrl(agent, id))
+  }
+
+  window.setErrorMessage = (ex) => {
+    const elErrorMessage = document.getElementById('error-message')
+    elErrorMessage.classList.remove('hidden')
+    elErrorMessage.querySelector('.error').textContent = ex.stack || ex.message || ex
+  }
+
+  window.urlProxy = (agent, url) => {
+    const isLocal = agent === 'local'
+    const prefixApi = isLocal ? pathJoin(appBasePath, 'api') : pathJoin(appBasePath, 'v1', '_proxy', agent)
+    const proxyLocal = isLocal ? localBaseUrl : localInitUrl
+    return new URL(prefixApi + url, proxyLocal || window.location.origin)
+  }
+
+  window.fetchInitModel = async () => {
+    try {
+      const res = await fetch(new URL(pathJoin(appBasePath, 'v1', 'agentic', 'init'), localInitUrl || window.location.origin))
+      if (!res.ok) {
+        throw new Error(`API Init :: ${res.status}`)
+      }
+      return await res.json()
+    } catch (ex) {
+      window.setErrorMessage(ex)
+      console.error('Init:', ex)
+      return []
+    }
+  }
+
+  window.setTitle = (model, session_id) => {
+    if (!model) return
+    try {
+      const title = model.display || model.name
+      // document.getElementById('model_name').textContent = title
+      document.title = title ? (session_id ? `${session_id.replace('|', ' | ')} : ${title}` : title) : 'Agentic Chat'
+    } catch (ex) {
+      window.setErrorMessage(ex)
+      console.error('Failed to set title:', ex)
+    }
+  }
+
+  window.applyTheme = (theme) => {
+    if (typeof document === 'undefined' || typeof localStorage === 'undefined') return
+
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+
+    localStorage.setItem(consts.THEME_NAME, theme)
+  }
+
+  window.getInitialTheme = () => {
+    let initialTheme = 'light'
+    if (typeof window !== 'undefined') {
+      initialTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+    if (typeof localStorage !== 'undefined') {
+      initialTheme = localStorage.getItem(consts.THEME_NAME) || initialTheme
+    }
+    return initialTheme
+  }
+
+  window.helpModalEvents = {
+    open: () => {
+      document.dispatchEvent(new CustomEvent('openHelpModal'))
+    },
+    close: () => {
+      document.dispatchEvent(new CustomEvent('closeHelpModal'))
+    },
+  }
+
+  window.applyTheme(getInitialTheme())
+</script>
+
+<style>
+  /* Enhanced styles for Tippy tooltip */
+  :global(.tippy-box[data-theme~='custom']) {
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    background: #364153;
+  }
+
+  :global(.tippy-box[data-theme~='custom'] .tippy-arrow) {
+    color: #364153;
+  }
+
+  :global(html.dark .tippy-box[data-theme~='custom']) {
+    background: #d1d5dc;
+    color: #364153;
+  }
+
+  :global(html.dark .tippy-box[data-theme~='custom'] .tippy-arrow) {
+    color: #d1d5dc;
+  }
+</style>

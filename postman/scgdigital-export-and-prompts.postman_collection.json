@@ -1,0 +1,319 @@
+{
+  "info": {
+    "_postman_id": "c96db5d2-9ea4-4d9e-8e8d-234d8df6be79",
+    "name": "SCG Digital API - Export and Prompt Files",
+    "description": "Collection สำหรับ API ที่ใช้ x-cap-api-key: export chat history เป็นไฟล์/JSON และจัดการ dynamic prompt ใน database. ค่า default จะถูก seed จาก agentic/prompts ตอน migration แรก. หลัง update prompt แล้ว request ถัดไปของ AI จะอ่านค่าจาก database ทันที ไม่ต้อง restart service.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3081",
+      "type": "string"
+    },
+    {
+      "key": "api_key",
+      "value": "abcd_1234",
+      "type": "string"
+    },
+    {
+      "key": "begin_date",
+      "value": "2026-05-28",
+      "type": "string"
+    },
+    {
+      "key": "last_date",
+      "value": "2026-05-29",
+      "type": "string"
+    },
+    {
+      "key": "export_limit",
+      "value": "100",
+      "type": "string"
+    },
+    {
+      "key": "prompt_file",
+      "value": "llm_main_thought.md",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "x-cap-api-key",
+        "type": "string"
+      },
+      {
+        "key": "value",
+        "value": "{{api_key}}",
+        "type": "string"
+      },
+      {
+        "key": "in",
+        "value": "header",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "History Export",
+      "description": "กลุ่ม API สำหรับ export chat history ด้วย date range. ใช้ header x-cap-api-key เสมอ.",
+      "item": [
+        {
+          "name": "Export Full History - JSON",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/history/export/full?beginDate={{begin_date}}&lastDate={{last_date}}&limit={{export_limit}}&res_format=json",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "history",
+                "export",
+                "full"
+              ],
+              "query": [
+                {
+                  "key": "beginDate",
+                  "value": "{{begin_date}}",
+                  "description": "วันที่เริ่มต้น inclusive, format YYYY-MM-DD"
+                },
+                {
+                  "key": "lastDate",
+                  "value": "{{last_date}}",
+                  "description": "วันที่สิ้นสุด exclusive, format YYYY-MM-DD"
+                },
+                {
+                  "key": "limit",
+                  "value": "{{export_limit}}",
+                  "description": "จำนวน session สูงสุด"
+                },
+                {
+                  "key": "res_format",
+                  "value": "json",
+                  "description": "json = response เป็น array ของ session"
+                }
+              ]
+            },
+            "description": "Export chat แบบ full เป็น JSON. แต่ละ turn มี input, answer, contextWindow และ tools. contextWindow คือ context ที่ AI ใช้ก่อนตอบ: previous chat + current user + tool input/output."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('response is array', function () { pm.expect(pm.response.json()).to.be.an('array'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Export Full History - CSV File",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "text/csv"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/history/export/full?beginDate={{begin_date}}&lastDate={{last_date}}&limit={{export_limit}}&res_format=csv",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "history",
+                "export",
+                "full"
+              ],
+              "query": [
+                {
+                  "key": "beginDate",
+                  "value": "{{begin_date}}"
+                },
+                {
+                  "key": "lastDate",
+                  "value": "{{last_date}}"
+                },
+                {
+                  "key": "limit",
+                  "value": "{{export_limit}}"
+                },
+                {
+                  "key": "res_format",
+                  "value": "csv",
+                  "description": "csv = download/export เป็นไฟล์"
+                }
+              ]
+            },
+            "description": "Export เป็น CSV file. ใน Postman ให้กด Send and Download หรือกด Save Response เพื่อบันทึกไฟล์. คอลัมน์หลัก: sessionId, chatId, input, answer, contextWindow, tools."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('csv content returned', function () { pm.expect(pm.response.text()).to.include('sessionId'); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Prompt Files",
+      "description": "กลุ่ม API สำหรับอ่านและแก้ dynamic prompt ใน database. ใช้ relative path เดิม เช่น llm_main_thought.md หรือ content-identify/image.md และอนุญาตเฉพาะ .md/.txt.",
+      "item": [
+        {
+          "name": "List Prompt Files",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/prompts/files",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "prompts",
+                "files"
+              ]
+            },
+            "description": "แสดงรายการ prompt records ใน database เช่น llm_main_thought.md, llm_main_trusted.md, content-identify/image.md. ค่า default ถูก seed จาก agentic/prompts ตอน migration แรก."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Prompt File",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/prompts/{{prompt_file}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "prompts",
+                "{{prompt_file}}"
+              ]
+            },
+            "description": "อ่าน prompt record หนึ่งรายการจาก database. ตัวแปร prompt_file เป็น relative path เช่น llm_main_thought.md หรือ content-identify/image.md."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Prompt File - Main Thought",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"create\": true,\n  \"content\": \"# Object:\\nYou are Bobby, SCG Digital assistant.\\n\\n## Rules\\n- Answer in Thai.\\n- Use official tools before answering product or service questions.\\n- Keep answers concise.\\n- Do not show URLs or markdown links.\\n\\n### List of Basic knowledge\\n{BasicKnowledge}\\n\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/prompts/llm_main_thought.md",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "prompts",
+                "llm_main_thought.md"
+              ]
+            },
+            "description": "แทนที่ content ของ llm_main_thought.md ใน database. create=true จะสร้าง record ถ้ายังไม่มี. หลัง update แล้ว request ถัดไปของ AI จะใช้ prompt นี้ทันที ไม่ต้อง restart service."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('update ok', function () { pm.expect(pm.response.json().ok).to.eql(true); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update Prompt File - By Variable",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"create\": false,\n  \"content\": \"# Prompt\\nReplace this with the full prompt content.\\n\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/prompts/{{prompt_file}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "prompts",
+                "{{prompt_file}}"
+              ]
+            },
+            "description": "แก้ไฟล์ตามตัวแปร prompt_file. create=false จะบังคับว่าไฟล์ต้องมีอยู่แล้ว ถ้าไม่มีจะได้ 404. ใช้สำหรับแก้ llm_personality.md, llm_main_trusted.md, llm_language.md หรือไฟล์ .txt/.md ใต้ prompt directory."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

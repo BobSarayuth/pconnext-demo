@@ -1,0 +1,92 @@
+name: Releaser
+run-name: Releaser
+
+on:
+  push:
+    branches: [develop]
+
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+  checks: write
+  pull-requests: write
+
+jobs:
+  releaser:
+    runs-on: ubuntu-24.04
+    env:
+      RETENTION_DAYS: 14
+    steps:
+      - name: Checkout code ✨
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Git 🎉
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+      - name: Extract environment prefix 🔍
+        run: |
+          # Extract prefix up to the first dash from github.ref_name
+          # For release events, use the release tag name
+          if [[ "${{ github.event_name }}" == "release" ]]; then
+            EXTRACTED_ENV=$(echo "${{ github.event.release.name }}" | cut -d'-' -f1)
+          else
+            # For other events, extract from ref name
+            EXTRACTED_ENV=$(echo "${{ github.ref_name }}" | cut -d'-' -f1)
+          fi
+
+          # Validate if the extracted value is one of the allowed environments
+          if [[ "$EXTRACTED_ENV" == "uat" || "$EXTRACTED_ENV" == "prod" ]]; then
+            DEPLOY_ENV_NAME=$EXTRACTED_ENV
+          else
+            DEPLOY_ENV_NAME="dev"
+          fi
+
+          echo "DEPLOY_ENV_NAME=$DEPLOY_ENV_NAME" >> $GITHUB_ENV
+          echo "Using environment: $DEPLOY_ENV_NAME"
+
+          TAG_NAME="${{ github.event.release.tag_name }}"
+          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
+
+      - name: Get builder workflow number 🔢
+        run: |
+          BUILDER_RUN_NUMBER=$(gh api repos/${{ github.repository }}/actions/workflows/builder.yml/runs --jq 'first(.workflow_runs[]).run_number')
+          BUILDER_RUN_NUMBER=$((BUILDER_RUN_NUMBER + 1))
+          echo "BUILDER_RUN_NUMBER=$BUILDER_RUN_NUMBER" >> $GITHUB_ENV
+        env:
+          GH_TOKEN: ${{ secrets.GH_WORKFLOW_PAT }}
+
+      - name: Create tag 🎯
+        if: ${{ !github.event.release.tag_name }}
+        run: |
+          TAG_NAME="${{ env.DEPLOY_ENV_NAME }}-${{ env.BUILDER_RUN_NUMBER }}"
+          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
+          git tag -f $TAG_NAME
+          git push -f origin $TAG_NAME
+
+      - name: Add workflow info to summary ℹ️
+        run: |
+          echo "## ℹ️ Workflow Summary" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment:** ${{ env.DEPLOY_ENV_NAME }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Tag Created:** ${{ env.TAG_NAME }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Builder Run Number:** ${{ env.BUILDER_RUN_NUMBER }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Triggered By:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Repository:** ${{ github.repository }}" >> $GITHUB_STEP_SUMMARY
+
+      - name: Trigger workflow 🚀
+        run: |
+          gh workflow run "builder.yml" --ref ${{ env.TAG_NAME }} -f env=${{ env.DEPLOY_ENV_NAME }}
+        env:
+          GH_TOKEN: ${{ secrets.GH_WORKFLOW_PAT }}
+
+      - name: Run retention cleanup 🧹
+        uses: ./.github/actions/retention
+        if: ${{ !github.event.release.tag_name }}
+        with:
+          retention_days: ${{ env.RETENTION_DAYS }}
+          env_name: ${{ env.DEPLOY_ENV_NAME }}

@@ -1,0 +1,77 @@
+name: "Tag and Branch Retention"
+description: "Cleans up old tags and merged branches based on retention days"
+inputs:
+  retention_days:
+    description: "Number of days to retain tags and branches"
+    required: true
+    default: "14"
+  env_name:
+    description: "Environment name for tag filtering"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Delete old dev tags ♻️
+      if: ${{ github.event.release.tag_name != '' }}
+      shell: bash
+      run: |
+        # Fetch all tags
+        git fetch --tags
+
+        # Get current timestamp
+        CURRENT_TIME=$(date +%s)
+        RETENTION_SECONDS=$(({{ inputs.retention_days }} * 86400))
+        CUTOFF_TIME=$((CURRENT_TIME - RETENTION_SECONDS))
+
+        # Get all tags older than RETENTION_DAYS
+        TAGS_TO_DELETE=$(git for-each-ref --format '%(creatordate:unix) %(refname:short)' refs/tags/${{ inputs.env_name }}-* |
+          awk -v cutoff="$CUTOFF_TIME" '$1 < cutoff {print $2}')
+
+        # Add tag deletion info to summary
+        echo "## ♻️ Tag Cleanup" >> $GITHUB_STEP_SUMMARY
+
+        # Delete tags if there are any to delete
+        if [ -n "$TAGS_TO_DELETE" ]; then
+          echo "Deleting tags older than ${{ inputs.retention_days }} days:"
+          echo "### Deleted Tags:" >> $GITHUB_STEP_SUMMARY
+          for TAG in $TAGS_TO_DELETE; do
+            echo "  Deleting: $TAG"
+            git push --delete origin "$TAG"
+            echo "- \`$TAG\` (older than ${{ inputs.retention_days }} days)" >> $GITHUB_STEP_SUMMARY
+          done
+        else
+          echo "No tags older than ${{ inputs.retention_days }} days to delete"
+          echo "No tags needed to be deleted (none older than ${{ inputs.retention_days }} days)" >> $GITHUB_STEP_SUMMARY
+        fi
+
+    - name: Delete old merged branches 🧹
+      if: ${{ github.event.release.tag_name != '' }}
+      shell: bash
+      run: |
+        # Fetch all branches
+        git fetch --all
+
+        # Add branch cleanup info to summary
+        echo "## 🧹 Branch Cleanup" >> $GITHUB_STEP_SUMMARY
+        echo "### Deleted Branches:" >> $GITHUB_STEP_SUMMARY
+
+        # Find and delete merged branches older than retention days
+        for branch in $(git branch -r | grep -v 'main\|HEAD\|master'); do
+          # Remove origin/ prefix
+          branch_name=${branch#origin/}
+
+          # Get the last commit date of the branch
+          last_commit_date=$(git show -s --format=%ct origin/$branch_name)
+          current_date=$(date +%s)
+          days_old=$(( ($current_date - $last_commit_date) / 86400 ))
+
+          # Check if branch is merged into main
+          if git merge-base --is-ancestor origin/$branch_name origin/main; then
+            if [ $days_old -gt ${{ inputs.retention_days }} ]; then
+              echo "Deleting branch $branch_name (${days_old} days old)"
+              git push origin --delete $branch_name
+              echo "- \`$branch_name\` (${days_old} days old)" >> $GITHUB_STEP_SUMMARY
+            fi
+          fi
+        done

@@ -1,0 +1,13 @@
+{
+  "messages": [
+    {
+      "content": "มีเครื่องฟอกอากาศขายไหมราคาเท่าไหร่",
+      "additional_kwargs": {},
+      "response_metadata": {},
+      "type": "human",
+      "name": null,
+      "id": "580d9369-f212-4fc5-b281-dbf2591decee",
+      "example": false
+    }
+  ]
+}

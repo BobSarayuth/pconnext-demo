@@ -1,0 +1,76 @@
+@import 'tailwindcss';
+@custom-variant dark (&:where(.dark, .dark *));
+
+.sarabun {
+  font-family: 'Sarabun', sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+body.transition .transition-theme {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease !important;
+}
+
+code {
+  font-size: 0.85rem !important;
+}
+
+code::-webkit-scrollbar {
+  height: 4px;
+}
+
+.input-box::-webkit-scrollbar {
+  width: 4px;
+  padding-left: 0.6em;
+  margin: 2em 0;
+}
+
+.input-box::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.input-box::-webkit-scrollbar-thumb {
+  background: rgba(136, 136, 136, 0.5);
+  border-radius: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.input-box::-webkit-scrollbar-thumb:hover {
+  background: rgba(85, 85, 85, 0.8);
+}
+
+#chat-message.fade-out > p {
+  animation: popout 0.2s ease-out;
+  opacity: 0;
+}
+
+@keyframes popin {
+  0% {
+    transform: scale(1);
+    max-height: 100vmax;
+    opacity: 1;
+  }
+  20% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    max-height: 100vmax;
+  }
+}
+@keyframes popout {
+  0% {
+    max-height: 100vmax;
+    opacity: 1;
+  }
+  80% {
+    transform: scale(1.1);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+  }
+}

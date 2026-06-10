@@ -1,0 +1,161 @@
+name: cap-scgdigital-ai
+
+services:
+  scgdigital-api:
+    restart: always
+    image: cap-scgdigital-api:latest
+    container_name: af-scgdigital-api
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+    build:
+      dockerfile: Dockerfile
+      context: .
+      no_cache: true
+    ports:
+      - "3081:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - LOG_NAME=bobby-ai
+      - LOG_LEVEL=info
+      - NUMEXPR_NUM_THREADS=1
+      - AGENTIC_API_KEY=${DOCKER_AGENTIC_API_KEY:-abcd_1234}
+      - AGENTIC_JWT_ISSUER=${AGENTIC_JWT_ISSUER:-}
+      - AGENTIC_JWT_AUDIENCE=${AGENTIC_JWT_AUDIENCE:-}
+      - AGENTIC_JWT_JWKS_URL=${AGENTIC_JWT_JWKS_URL:-}
+      - AGENTIC_JWT_ALGORITHMS=${AGENTIC_JWT_ALGORITHMS:-RS256}
+      - AGENTIC_DB_POOL_SIZE=100
+      - AGENTIC_DB_URI=postgresql://postgres:password@af-db-postgres:5432/postgres
+      - AGENTIC_CACHE_URI=redis://:password@af-db-redis:6379/1
+      - AGENTIC_IMAGE_WISHLIST=scg.teemchat.net,localhost
+      - CAP_CONTENT_SERVICE_URL=https://cap-gateway-dev.scg-wedo.tech
+      - CAP_CONTENT_TOKEN_URL=https://cap-gateway-dev.scg-wedo.tech/api/oauth2/token
+      - CAP_CONTENT_CLIENT_ID=${CAP_CONTENT_CLIENT_ID:-client-id}
+      - CAP_CONTENT_CLIENT_SECRET=${CAP_CONTENT_CLIENT_SECRET:-client-secret}
+      - CAP_CONTENT_AUDIENCE=${CAP_CONTENT_AUDIENCE:-http://content-api:3000}
+      - CAP_CONTENT_KNOWLEDGE_INDEX=${CAP_CONTENT_KNOWLEDGE_INDEX:-home-content-article}
+
+      - AGENTIC_AGENT_MODEL=${AGENTIC_AGENT_MODEL}
+      - AGENTIC_SAFEGUARD_MODEL=${AGENTIC_SAFEGUARD_MODEL}
+      - AGENTIC_INSPECT_MODEL=${AGENTIC_INSPECT_MODEL}
+      - LITELLM_BASE_URL=https://do-cap-litellm-dev.scg-wedo.tech
+      - LITELLM_API_KEY=${LITELLM_API_KEY}
+      - LITELLM_LOG=ERROR
+      # - AGENTIC_AGENT_MODEL=litellm/azure/cap-vertex-gemini-3-flash-preview
+      # - AGENTIC_SAFEGUARD_MODEL=litellm/azure/cap-azure-gpt-5o-mini
+      # - AGENTIC_INSPECT_MODEL=litellm/azure/cap-azure-gpt-5o-mini
+      # - LITELLM_BASE_URL=https://litellm-dev.scg-wedo.tech
+      # - LITELLM_AGENTIC_API_KEY=${LITELLM_SAFEGUARD_API_KEY}
+      # - LITELLM_SAFEGUARD_API_KEY=${LITELLM_SAFEGUARD_API_KEY}
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:3000/healthz')\""]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - cap-common
+
+
+  agentic-chat:
+    restart: always
+    image: agentic-ai-chat:latest
+    container_name: af-agentic-chat
+    build:
+      dockerfile: Dockerfile
+      context: ./agentic-chat-ui/
+      no_cache: true
+      args:
+        AUTH_BASE_PATH: ${AUTH_BASE_PATH:-}
+    ports:
+      - "8095:4321"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 128M
+    environment:
+      AGENTIC_BASE_URL: http://scgdigital-api:3000/
+      AGENTIC_API_KEY: ${DOCKER_AGENTIC_API_KEY:-abcd_1234}
+      SCGDIGITAL_BASE_URL: http://scgdigital-api:3000/
+      SCGDIGITAL_API_KEY: ${DOCKER_AGENTIC_API_KEY:-abcd_1234}
+      AUTH_ENABLED: ${AUTH_ENABLED:-true}
+      AUTH_TENANT_ID: ${AUTH_TENANT_ID:-}
+      AUTH_AUTHORITY: ${AUTH_AUTHORITY:-}
+      AUTH_CLIENT_ID: ${AUTH_CLIENT_ID:-}
+      AUTH_BASE_PATH: ${AUTH_BASE_PATH:-}
+      AUTH_REDIRECT_URI: ${AUTH_REDIRECT_URI:-}
+      AUTH_SCOPE: ${AUTH_SCOPE:-openid profile email}
+      AUTH_PROXY_TOKEN_TYPE: ${AUTH_PROXY_TOKEN_TYPE:-auto}
+      AUTH_COOKIE_SECURE: ${AUTH_COOKIE_SECURE:-false}
+
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O - http://127.0.0.1:4321/v1/_debug/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      scgdigital-api:
+        condition: service_healthy
+    networks:
+      - cap-common
+
+  redis:
+    restart: always
+    image: redis:alpine
+    container_name: af-db-redis
+    command: redis-server --requirepass password
+    ports:
+      - "6385:6379"
+    volumes:
+      - af-db-redis:/data
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2G
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - cap-common
+
+  postgres:
+    restart: always
+    image: postgres:16-alpine
+    container_name: af-db-postgres
+    user: postgres
+    volumes:
+      - af-db-postgresql:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2G
+    ports:
+      - "5445:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - cap-common
+
+volumes:
+  af-db-postgresql:
+  af-db-redis:
+
+networks:
+  cap-common:

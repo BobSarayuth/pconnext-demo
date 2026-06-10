@@ -1,0 +1,14 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import { requireAuth } from '../../utils/auth'
+
+// This makes the route render on-demand instead of at build time
+export const prerender = false
+
+const authRedirect = requireAuth(Astro)
+if (authRedirect) return authRedirect
+
+const { id, agent } = Astro.params
+---
+
+<Layout {id} {agent} />

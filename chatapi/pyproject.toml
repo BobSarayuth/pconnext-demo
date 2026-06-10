@@ -1,0 +1,77 @@
+[project]
+name = "agentic-chat-api"
+version = "0.0"
+description = "An API service for agentic chat interactions and AI assistant capabilities"
+readme = "README.md"
+requires-python = ">=3.12,<4.0.0"
+
+[tool.ruff]
+# Same as Black.
+line-length = 120
+indent-width = 4
+
+# Assume Python 3.12
+target-version = "py312"
+
+[tool.ruff.lint]
+# Enable recommended set of rules
+select = [
+    "E", # pycodestyle errors
+    "F", # pyflakes
+    "B", # flake8-bugbear
+    "I", # isort
+    "C4", # flake8-comprehensions
+    "C90", # McCabe complexity
+    "N", # pep8-naming
+    "UP", # pyupgrade
+    "ANN", # flake8-annotations
+    "S", # flake8-bandit
+    "A", # flake8-builtins
+    "COM", # flake8-commas
+    "PT", # flake8-pytest-style
+    "RUF", # Ruff-specific rules
+]
+ignore = [
+    "ANN101", # Missing type annotation for `self`
+    "ANN102", # Missing type annotation for `cls`
+    "N817", # CamelCase `*` imported as acronym `*`
+    "N815", # Variable in function should be lowercase
+    "N803", # Argument name should be lowercase
+]
+
+# Allow fix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+unfixable = []
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+docstring-code-format = false
+docstring-code-line-length = "dynamic"
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+reportMissingTypeStubs = false
+
+exclude = ["**/.venv", "**/tests"]
+
+[tool.pytest.ini_options]
+testpaths = ["./tests"]
+addopts = ["--cov=.", "--cov-branch", "--cov-config=pyproject.toml"]
+asyncio_default_fixture_loop_scope = "function"
+
+[tool.coverage.report]
+show_missing = true
+
+[tool.coverage.xml]
+output = ".pytest_cache/coverage.xml"
+
+[tool.coverage.run]
+relative_files = true
+omit = [
+    ".venv/*"
+]

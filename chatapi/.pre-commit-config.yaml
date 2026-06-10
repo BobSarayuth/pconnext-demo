@@ -1,0 +1,42 @@
+default_language_version:
+  python: python3.12
+
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.11.13
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+  # - repo: https://github.com/RobertCraigie/pyright-python
+  #   rev: v1.1.388
+  #   hooks:
+  #     - id: pyright
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-yaml
+      - id: check-json
+      - id: end-of-file-fixer
+      - id: requirements-txt-fixer
+      - id: trailing-whitespace
+      - id: check-added-large-files
+        args: ["--maxkb=600"]
+      - id: name-tests-test
+      - id: mixed-line-ending
+      - id: check-executables-have-shebangs
+      - id: check-merge-conflict
+      - id: detect-aws-credentials
+        args:
+          - --allow-missing-credentials
+        exclude: config/gitleaks.toml
+  - repo: https://github.com/python-jsonschema/check-jsonschema
+    rev: 0.33.0
+    hooks:
+      - id: check-github-actions
+      - id: check-github-workflows
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.27.2
+    hooks:
+      - id: gitleaks
+    # hotfix: git config http.sslVerify false
