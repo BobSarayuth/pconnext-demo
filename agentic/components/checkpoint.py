@@ -310,10 +310,10 @@ class AsyncRedisSaver(BaseCheckpointSaver):
                 cursor = 0
                 while True:
                     cursor, keys = await self.conn.scan(cursor=cursor, match=pattern, count=500)  # type: ignore
-                    if cursor == 0:
-                        break
                     if keys:
                         all_keys += await self.conn.delete(*keys)  # type: ignore
+                    if cursor == 0:
+                        break
 
         return all_keys
 

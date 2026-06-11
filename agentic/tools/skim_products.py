@@ -3,21 +3,20 @@ from langchain_core.tools import ToolException, tool
 from langgraph.types import Command
 from typing_extensions import Annotated, Tuple
 
-from agentic.tools.utils import ContentService, normalize_product_name, parse_product_response, tool_exception_tuple
+from agentic.tools.utils import ContentService, normalize_product_name, tool_exception_tuple
 
 
 def fetch_product_message(product_name: str, limit: int):
     api = ContentService()
-    res = api.get_product_by_name(product_name, limit)
-
-    if res.status_code != 200:
-        return [], f"API error {res.status_code}: {res.text}"
-
-    return parse_product_response(res.json())
+    return api.search_sku_products_by_name(product_name, limit)
 
 
 def response_skim(msg: list, tool_call_id: str):
     return Command(update={"messages": [ToolMessage("\n".join(msg), tool_call_id=tool_call_id)]})
+
+
+def _one_line(value) -> str:
+    return str(value).replace("\n", "")
 
 
 @tool(response_format="content_and_artifact")
@@ -44,7 +43,7 @@ def skim_products(
             "ไม้พื้นtclip": "พื้นตกแต่ง เอสซีจี รุ่น ที-คลิปชิลด์",
         }
         synonyms_msg = ""
-        if search_term in synonyms.keys():
+        if search_term in synonyms:
             search_term_old = search_term
             search_term = synonyms[search_term_old]
             synonyms_msg += f"Found synonym for {search_term_old} as {search_term}"
@@ -64,10 +63,10 @@ def skim_products(
 
         for row in products:
             # Check for both possible fields
-            product_name = row.get("displayNameTh") or row.get("display_name_th")
+            product_name = row.get("displayNameTh") or row.get("display_name_th") or row.get("name")
             row.pop("url", None)
             metadata = row.get("metadata", {})
-            metadata.pop("score")
+            metadata.pop("score", None)
             # Normalize the product name
             normalized_name = normalize_product_name(product_name)
 
@@ -79,13 +78,13 @@ def skim_products(
 
             # Check if this is an exact normalized match
             if normalized_name == normalized_search_term:
-                matched_name = row.get("displayNameTh") or row.get("display_name_th") or "Unknown Product"
+                matched_name = row.get("displayNameTh") or row.get("display_name_th") or row.get("name") or "Unknown Product"
                 # Instead of only metadata, we now want to return all product details.
                 meta = row.pop("metadata")
                 results = [
                     f"Found an exact match for '{search_term}' and summarize product details in a single line, clearly and concisely, with a maximum of 1800 characters (including spaces).",
                     f"- Product Name: '{matched_name}'",
-                    f"- Full Product Details: {row} meta data: {str(meta).replace('\n', '')}",
+                    f"- Full Product Details: {row} meta data: {_one_line(meta)}",
                     "- Do not show URLs or links in the customer-facing answer.",
                 ]
 
@@ -112,7 +111,7 @@ def skim_products(
         results.append(synonyms_msg)
         results.extend(
             [
-                f"- '{product['product_name']}', meta data: {str(product['metadata']).replace('\n', '')}"
+                f"- '{product['product_name']}', meta data: {_one_line(product['metadata'])}"
                 for product in skimmed[:8]
             ]
         )

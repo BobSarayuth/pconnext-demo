@@ -1,9 +1,12 @@
 import logging
+import base64
+import os
 import re
 from collections.abc import AsyncGenerator, AsyncIterator
 from typing import Any
 
 from agentic import get_graph, is_setup
+from agentic.components.provider import llm_provider
 from fastapi.exceptions import HTTPException
 from langchain_core.messages import HumanMessage
 from langchain_core.runnables import RunnableConfig
@@ -14,12 +17,12 @@ from uuid_extensions import uuid7str
 from chatapi.invokes import create_config
 
 # from chatapi.config.app import _config
-from chatapi.models.chat import FormatType, PredictionConfig, PredictionRequest
+from chatapi.models.chat import FormatType, PredictionAttachment, PredictionConfig, PredictionRequest
 from chatapi.models.history import AgentUsedTools
 from chatapi.models.messages import RespondedType
 from chatapi.models.orm import ChatType
 from chatapi.router.queries import get_checksum
-from chatapi.workflow.attachment import LOCAL_BLOB, FileAttachment, ImageMessage
+from chatapi.workflow.attachment import AUDIO_TYPES, LOCAL_BLOB, FileAttachment, ImageMessage
 from chatapi.workflow.chat_history import BaseChatHistory
 from chatapi.workflow.transform import AIMessageChunkTransformer, deserialize_stream
 from chatapi.workflow.utils import Timer
@@ -27,6 +30,72 @@ from chatapi.workflow.utils import Timer
 stream_mode: list[StreamMode] = ["messages", "updates"]
 
 logger = logging.getLogger("fastapi.prediction")
+DEFAULT_AUDIO_MODEL = os.getenv("AGENTIC_AUDIO_MODEL", os.getenv("AGENTIC_AGENT_MODEL", "openai:gpt-4o-mini"))
+
+
+def _normalize_attachment_type(value: str | None) -> str:
+    return str(value or "").strip().lower()
+
+
+def _normalize_attachment_refs(attachments: list[str | PredictionAttachment] | None) -> list[tuple[str, str]]:
+    refs: list[tuple[str, str]] = []
+    for attachment in attachments or []:
+        if isinstance(attachment, str):
+            refs.append(("", attachment))
+            continue
+
+        declared_type = _normalize_attachment_type(attachment.type)
+        urls = attachment.url if isinstance(attachment.url, list) else [attachment.url]
+        refs.extend((declared_type, url) for url in urls if url)
+    return refs
+
+
+def _is_declared_audio(declared_type: str) -> bool:
+    return declared_type == "audio" or declared_type.startswith("audio/")
+
+
+def _is_declared_image(declared_type: str) -> bool:
+    return declared_type == "image" or declared_type.startswith("image/")
+
+
+def _is_audio_content_type(content_type: str) -> bool:
+    normalized = _normalize_attachment_type(content_type).split(";")[0]
+    return normalized.startswith("audio/") or normalized in AUDIO_TYPES
+
+
+def _audio_format(content_type: str, url: str) -> str:
+    normalized = _normalize_attachment_type(content_type).split(";")[0]
+    extension = url.split("?")[0].rsplit(".", 1)[-1].lower() if "." in url.split("?")[0] else ""
+    if "wav" in normalized or extension == "wav":
+        return "wav"
+    if "mpeg" in normalized or "mp3" in normalized or extension == "mp3":
+        return "mp3"
+    return extension or "mp3"
+
+
+def _transcribe_audio(file: FileAttachment, url: str) -> str:
+    audio_model = llm_provider(DEFAULT_AUDIO_MODEL, False, {"temperature": 0, "top_p": 0.7})
+    audio_data = base64.b64encode(file.blob).decode("utf-8")
+    message = HumanMessage(
+        content=[
+            {
+                "type": "text",
+                "text": (
+                    "Transcribe this Thai or English audio exactly. "
+                    "Return only the spoken text. Do not answer the user."
+                ),
+            },
+            {
+                "type": "input_audio",
+                "input_audio": {
+                    "data": audio_data,
+                    "format": _audio_format(file.content_type, url),
+                },
+            },
+        ]
+    )
+    response = audio_model.invoke([message])
+    return str(response.content or "").strip()
 
 
 def _identify_append(content_type: list, res_type: RespondedType) -> None:
@@ -74,11 +143,13 @@ def _process_attachments(
     content_type: list,
     state: dict,
 ) -> None:
-    if not payload.attachments:
+    attachment_refs = _normalize_attachment_refs(payload.attachments)
+    if not attachment_refs:
         return
 
-    attachments = []
-    for endpoint in payload.attachments:
+    image_attachments = []
+    audio_transcripts = []
+    for declared_type, endpoint in attachment_refs:
         if db and endpoint.startswith(LOCAL_BLOB):
             check_sum = endpoint.replace(LOCAL_BLOB, "")
             obj = get_checksum(db, session_id=str(payload.sessionId), file=check_sum)
@@ -90,6 +161,8 @@ def _process_attachments(
             file = FileAttachment(url=endpoint)
 
         if file.content_type.startswith("image/"):
+            if declared_type and not _is_declared_image(declared_type):
+                raise HTTPException(status_code=400, detail=f"Attachment type mismatch: {declared_type} is not image")
             _identify_append(content_type, RespondedType.IMAGE)
             img = file.to_image()
             tools.append(
@@ -100,11 +173,31 @@ def _process_attachments(
                     toolOutput=img.get_thumbnail(),
                 ).model_dump(),
             )
-            attachments.append(img.to_dict())
+            image_attachments.append(img.to_dict())
+        elif _is_audio_content_type(file.content_type) or _is_declared_audio(declared_type):
+            _identify_append(content_type, RespondedType.TEXT)
+            transcript = _transcribe_audio(file, endpoint)
+            if not transcript:
+                raise HTTPException(status_code=400, detail="Unable to transcribe audio attachment")
+            tools.append(
+                AgentUsedTools(
+                    id=uuid7str(),
+                    tool="audio_transcription",
+                    toolInput={"audio_url": endpoint},
+                    toolOutput=transcript,
+                ).model_dump(),
+            )
+            audio_transcripts.append(transcript)
         else:
             raise HTTPException(status_code=400, detail=f"Invalid content_type: {file.content_type!s}")
 
-    state["messages"].append(HumanMessage(content=attachments))
+    if audio_transcripts:
+        audio_text = "\n".join(f"ข้อความจากเสียง: {text}" for text in audio_transcripts)
+        payload.question = "\n".join(part for part in [payload.question or "", audio_text] if part).strip()
+        state["messages"].append(HumanMessage(content=audio_text))
+
+    if image_attachments:
+        state["messages"].append(HumanMessage(content=image_attachments))
 
 
 def _bind_attachment_and_tools(db: Session | None, payload: PredictionRequest) -> tuple[dict, list, list]:
@@ -220,13 +313,14 @@ def _prepare_prediction_context(
 
     state, tools, content_type = _bind_attachment_and_tools(db, payload)
 
-    files_count = len(payload.attachments) if payload.attachments else 0
+    attachment_refs = _normalize_attachment_refs(payload.attachments)
+    files_count = len(attachment_refs)
     if files_count > 0:
         logger.info(f"Attachments {files_count} download... ")
 
     reasoning = {
         "messages": [payload.question] if payload.question else [],
-        "attachments": payload.attachments,
+        "attachments": [{"type": attachment_type, "url": url} for attachment_type, url in attachment_refs],
         "usedTools": tools,
         "meta": {
             # "agentic": f"{_config.project_name}@{_config.project_version}",
@@ -239,7 +333,7 @@ def _prepare_prediction_context(
     logger.info(
         {
             "question": payload.question,
-            "attachments": len(payload.attachments) if payload.attachments else 0,
+            "attachments": files_count,
             "streaming": payload.streaming,
             "reasoning": payload.reasoning,
         },

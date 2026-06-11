@@ -21,17 +21,36 @@ class PredictionConfig(BaseModel):
     )
 
 
+class PredictionAttachment(BaseModel):
+    type: str | None = Field(default=None, description="Attachment media type, e.g. image, audio, image/jpeg")
+    url: str | list[str] = Field(description="One or more attachment URLs")
+
+
 class PredictionRequest(BaseModel):
+    userAgent: str | None = Field(
+        default=None,
+        description="Agent or service identifier, accepted for LINE-style payloads",
+        examples=["LINE"],
+    )
+    username: str | None = Field(
+        default=None,
+        description="User identifier, accepted for LINE-style payloads",
+        examples=["user_123"],
+    )
     question: str | None = Field(description="User's question", examples=["What is Python?"])
     config: PredictionConfig | dict | None = Field(
         default=None,
         description="Model invoke configuration",
         examples=[{"username": "abc"}],
     )
-    attachments: list[str] | None = Field(
+    attachments: list[str | PredictionAttachment] | None = Field(
         default_factory=list,
-        description="List of attachments URLs related to the question",
-        examples=[["http://example.com/image.jpg", "http://example.com/job.pdf"]],
+        description="List of attachment URLs or grouped attachments related to the question",
+        examples=[
+            ["http://example.com/image.jpg"],
+            [{"type": "image", "url": ["http://example.com/image.jpg"]}],
+            [{"type": "audio", "url": ["http://example.com/audio.m4a"]}],
+        ],
     )
     sessionId: str | None = Field(
         default="",

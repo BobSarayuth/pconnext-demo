@@ -8,7 +8,7 @@ from agentic.models.responsed import ActionType
 def switch_agent_fasttrack(
     fasttrack: Annotated[
         bool,
-        "Set fasttrack to True if the situation summary shows intent to buy, place an order, or interest in making a purchase.",
+        "Set fasttrack to True only for supported urgent operator handoff cases. Do not set True for price, quotation, purchase, checkout, payment, or order-placement requests because this system does not support them.",
     ],
     negative: Annotated[
         Optional[bool],
@@ -16,7 +16,7 @@ def switch_agent_fasttrack(
     ] = None,
     situation_summary: Annotated[
         Optional[str],
-        "A brief summary of the user's situation when they want to buy a product or solution service, or when they request help, written in Thai.",
+        "A brief summary of the user's supported help request, written in Thai. Do not use this tool only for price, quotation, purchase, checkout, payment, or order-placement requests.",
     ] = None,
 ) -> Tuple[str, dict]:
     """
@@ -27,6 +27,7 @@ def switch_agent_fasttrack(
      - The user asks about product delivery, complaint, expresses dissatisfaction, negative sentiment toward, or reports system issues such as slowness or errors.
      - The user input is in a language other than Thai or English.
      - The user input the exact same message twice in a row.
+    Do not call this tool only because the user asks for price, quotation, purchase, checkout, payment, or order placement.
     """
 
     notified = 'Always inform the customer that you have already contacted an SCG Digital ONLINE operator to assist them. Politely ask them to wait a moment for the operator to join and help, Example as: \n"บ๊อบบี๊ ขออนุญาตส่งต่อพี่ๆ เจ้าหน้าที่เพื่อช่วยเหลือดูเเลคุณลูกค้าเพิ่มเติม กรุณารอสักครู่ครับ"'

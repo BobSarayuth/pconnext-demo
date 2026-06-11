@@ -1,3 +1,4 @@
+import json
 import logging
 from typing import Optional, Union
 
@@ -20,6 +21,8 @@ from agentic.models.responsed import ActionType, EventType, MainResponded, MainT
 from agentic.tools import TOOLS, check_tools, execute_tool
 
 logger = logging.getLogger("workflow")
+tool_logger = logging.getLogger("workflow.tool_calls")
+MAX_TOOL_LOG_CHARS = 4000
 
 DEFAULT_MODEL_CONFIG = SettingsConfigDict(env_prefix="AGENTIC_")
 
@@ -54,6 +57,58 @@ def find_messages_type(state: AgentState, message_type: str) -> AnyMessage:
     return state["messages"][-1]
 
 
+def is_reset_request(state: AgentState) -> bool:
+    human_message = find_messages_type(state, "human")
+    return isinstance(human_message.content, str) and human_message.content.strip().lower() == "reset"
+
+
+def _truncate_tool_log(value, max_chars: int = MAX_TOOL_LOG_CHARS) -> str:
+    if isinstance(value, str):
+        text = value
+    else:
+        try:
+            text = json.dumps(value, ensure_ascii=False, default=str)
+        except TypeError:
+            text = str(value)
+
+    if len(text) <= max_chars:
+        return text
+    return f"{text[:max_chars]}...<truncated {len(text) - max_chars} chars>"
+
+
+def log_tool_messages(messages: list[AnyMessage]) -> None:
+    tool_calls: dict[str, dict] = {}
+
+    for msg in messages:
+        for call in getattr(msg, "tool_calls", []) or []:
+            if not isinstance(call, dict):
+                continue
+            call_id = str(call.get("id") or "")
+            name = call.get("name") or "unknown"
+            args = call.get("args") or {}
+            if call_id:
+                tool_calls[call_id] = {"name": name, "args": args}
+            tool_logger.info(
+                "tool_call name=%s args=%s",
+                name,
+                _truncate_tool_log(args),
+            )
+
+    for msg in messages:
+        if getattr(msg, "type", None) != "tool":
+            continue
+        call_id = str(getattr(msg, "tool_call_id", "") or "")
+        call = tool_calls.get(call_id, {})
+        content = getattr(msg, "content", "")
+        artifact = getattr(msg, "artifact", None)
+        tool_logger.info(
+            "tool_result name=%s content=%s artifact=%s",
+            call.get("name", "unknown"),
+            _truncate_tool_log(content),
+            _truncate_tool_log(artifact),
+        )
+
+
 async def clearly_response(llm, message: str):
     translate = await llm.ainvoke(
         [
@@ -82,7 +137,7 @@ def init_main_thought(context: AgentContext) -> CompiledStateGraph:
     chosen_tools = check_tools(
         [
             "calculator",
-            "get_basic_knowledge",
+            "faq",
             # Product Search and Information
             "skim_products",
             "search_specific_product",
@@ -306,7 +361,9 @@ async def agent_invocation(  # noqa: C901
         while ATTEMPT < MAX_ATTEMPT:
             try:
                 # {**config.get('metadata', {}), "temperature": 1}
+                previous_message_count = len(state["messages"])
                 state = await react_agent.ainvoke(state, config)  # type: ignore
+                log_tool_messages(state["messages"][previous_message_count:])
 
                 # if state["messages"][-1].content:
                 #     continue
@@ -465,17 +522,33 @@ async def setup_workflow():
             react_agent=main_thought,
         )
 
+    async def reset_node(state, config):
+        thread_id = config.get("configurable", {}).get("thread_id")
+        deleted = await checkpointer.adel_tuple(thread_id) if thread_id else 0
+        logger.info("chat history reset thread_id=%s deleted_keys=%s", thread_id, deleted)
+        state["messages"] = [AIMessage(content="เริ่มต้นการสนทนาใหม่เรียบร้อยแล้วครับ")]
+        state["language"] = "Thai"
+        state["ask_count"] = 0
+        state["has_error"] = False
+        state["prompt_config"] = get_prompt_config(config)
+        return state
+
+    def route_start(state):
+        return "reset" if is_reset_request(state) else "agent"
+
     async def responded_node(state):
         return await responded(state=state, llm=main_trusted)
 
     workflow.add_node("agent", RunnableLambda(agent_node))
+    workflow.add_node("reset", RunnableLambda(reset_node))
     workflow.add_node("responded", RunnableLambda(responded_node))
 
     # workflow.add_node("safeguard", lambda state: safeguard(state=state, context=context))
 
-    workflow.add_edge(START, "agent")
+    workflow.add_conditional_edges(START, route_start, {"reset": "reset", "agent": "agent"})
     # workflow.add_edge(START, "init")
     # workflow.add_edge("init", "agent")
+    workflow.add_edge("reset", "responded")
     workflow.add_edge("agent", "responded")
     workflow.add_edge("responded", END)
 

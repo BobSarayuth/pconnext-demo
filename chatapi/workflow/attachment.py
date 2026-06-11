@@ -17,6 +17,18 @@ policy = ImagePolicy()
 LOCAL_BLOB = "local-blob://"
 
 VALID_TYPES = ["image/png", "image/jpeg", "image/jpg", "image/webp", "image/gif"]
+AUDIO_TYPES = [
+    "audio/mpeg",
+    "audio/mp3",
+    "audio/mp4",
+    "audio/m4a",
+    "audio/wav",
+    "audio/wave",
+    "audio/x-wav",
+    "audio/webm",
+    "audio/ogg",
+    "audio/aac",
+]
 
 logger.info(f"Allow image domain:{policy.IMAGE_WISHLIST.split(',')}")
 logger.info(f"Allow image type:{VALID_TYPES}")
@@ -74,6 +86,18 @@ class FileAttachment:
                     self.content_type = "image/webp"
                 elif file_ext in ["gif"]:
                     self.content_type = "image/gif"
+                elif file_ext in ["mp3"]:
+                    self.content_type = "audio/mpeg"
+                elif file_ext in ["m4a", "mp4"]:
+                    self.content_type = "audio/mp4"
+                elif file_ext in ["wav"]:
+                    self.content_type = "audio/wav"
+                elif file_ext in ["webm"]:
+                    self.content_type = "audio/webm"
+                elif file_ext in ["ogg", "oga"]:
+                    self.content_type = "audio/ogg"
+                elif file_ext in ["aac"]:
+                    self.content_type = "audio/aac"
                 logger.info(f" - Adjusted content type from extension: {self.content_type}")
         except Exception as e:
             logger.error(f" - Error checking content type: {e!s}")

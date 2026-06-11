@@ -53,6 +53,18 @@ def _get_authenticated_username(req: Request) -> str:
     )
 
 
+def _normalize_payload_config(payload: PredictionRequest) -> None:
+    if isinstance(payload.config, PredictionConfig):
+        payload.config = payload.config.__dict__
+    if payload.config is None:
+        payload.config = {}
+
+    if payload.username:
+        payload.config.setdefault("username", payload.username)
+    if payload.userAgent:
+        payload.config.setdefault("userAgent", payload.userAgent)
+
+
 async def event_stream(db: Session, req: Request, payload: PredictionRequest) -> AsyncGenerator[str, None]:
     try:
         async for node, mode, chunk_tool in prediction_stream(db, payload, ChatType.INTERNAL):
@@ -155,13 +167,12 @@ async def prediction(
 ) -> PredictionResponse | EventSourceResponse:
     """Processes prediction request and generates reasoning."""
     try:
-        if isinstance(payload.config, PredictionConfig):
-            payload.config = payload.config.__dict__
+        _normalize_payload_config(payload)
 
         if payload.config and not payload.config.get("userAgent") and not req.headers.get("user-agent"):
             raise HTTPException(status_code=400, detail="Field required header.userAgent")
 
-        if not payload.question and (payload.attachments and not len(payload.attachments)):
+        if not payload.question and not payload.attachments:
             raise HTTPException(status_code=400, detail="Field required body.question or body.attachments is empty")
 
         payload.sessionId = payload.generate_session() if payload.sessionId == "" else payload.sessionId

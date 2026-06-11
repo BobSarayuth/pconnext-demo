@@ -20,16 +20,17 @@ class TestExecuteTools:
         assert len(messages) > 0
         assert containText in toolOutput.update.get("messages")[0].content
 
-    def test_get_basic_knowledge(self):
-        toolOutput = TOOLS["get_basic_knowledge"].invoke(  # type: ignore
-            input=get_args({"building_material": ["ชุดครัวสำเร็จรูป"]})
-        )
-        messages = toolOutput.update.get("messages", [])
-        assert len(messages) > 0
+    def test_get_basic_knowledge_is_not_registered(self):
+        assert "get_basic_knowledge" not in TOOLS
+
+    def test_faq(self):
+        toolOutput = TOOLS["faq"].invoke(input=get_args({"query": "P Connext คืออะไร"}))  # type: ignore
+        assert "P Connext" in toolOutput.content
+        assert toolOutput.artifact.get("matches")
 
     def test_search_specific_product(self):
         toolOutput = TOOLS["search_specific_product"].invoke(  # type: ignore
-            input=get_args({"product_name": "กระเบื้องมุงหลังคา เอสซีจี รุ่น เพรสทีจ"})
+            input=get_args({"product_sku_id": "1", "product_name": "กระเบื้องมุงหลังคา เอสซีจี รุ่น เพรสทีจ"})
         )
         messages = toolOutput.update.get("messages", [])
         assert len(messages) > 0
@@ -37,6 +38,7 @@ class TestExecuteTools:
         assert (
             "Found" in toolOutput.update.get("messages")[0].content
             or "Search returned" in toolOutput.update.get("messages")[0].content
+        )
 
     def test_calculator(self):
         toolOutput = TOOLS["calculator"].invoke(input=get_args({"expression": "10 + 15"}))  # type: ignore

@@ -4,6 +4,7 @@ import os
 import re
 import threading
 import time
+from typing import Any
 
 import httpx
 import redis
@@ -35,43 +36,41 @@ class ContentServiceConfig(BaseSettings):
 MAX_RETRY = 3
 TOKEN_REFRESH_MARGIN_SECONDS = 60
 TOKEN_CACHE_KEY_PREFIX = "content_service:token"
-MAX_PRODUCT_SEARCH_SIZE = 50
-PRODUCT_SEARCH_FIELDS = [
-    "display_name_th",
-    "display_name_en",
-    "short_description.text",
-    "brand",
-    "color",
-    "barcode",
-    "mat_no",
-    "sap_id",
-    "scghome_id",
-    "basic_data",
-    "b2c_selling_point",
-    "material",
-    "installation_tips",
-    "usage_tips",
-    "care_warning_instruction",
-    "standard_list",
-    "warranty_description",
-    "height_unit",
-    "height_number",
-    "length_unit",
-    "length_number",
-    "weight_unit",
-    "weight_number",
-    "width_unit",
-    "width_number",
-    "custom_short_description",
-    "custom_basic_data",
-    "custom_b2c_selling_point",
-    "custom_care_warning_instruction",
-    "custom_warranty_description",
-    "custom_usage_tips",
-    "custom_installation_tips",
-    "content",
+SKU_QUERY_MAX_SIZE = 100
+SKU_INDEX_NAME = "cpo-sku-dev"
+SKU_SEARCH_FIELDS = [
+    "product_sku_id",
+    "id",
+    "code",
+    "name",
+    "description",
+    "search_keyword",
+    "active",
 ]
-KNOWLEDGE_SEARCH_FIELDS = ["id","title","content","tag","keyword"]
+SKU_SEMANTIC_WEIGHT = 0.75
+SKU_LEXICAL_WEIGHT = 0.25
+RRF_K = 60
+FAQ_CONTAINER_KEYS = {
+    "faq",
+    "faqs",
+    "product_faq",
+    "product_faqs",
+    "frequently_asked_questions",
+    "question_answer",
+    "question_answers",
+    "questions",
+    "answers",
+    "question_list",
+    "answer_list",
+    "qa",
+    "qas",
+    "q&a",
+    "คำถาม",
+    "คำตอบ",
+    "คำถามที่พบบ่อย",
+}
+FAQ_QUESTION_KEYS = {"question", "questions", "q", "title", "topic", "คำถาม"}
+FAQ_ANSWER_KEYS = {"answer", "answers", "a", "content", "detail", "details", "description", "คำตอบ"}
 
 _content_service_token_cache: dict[str, str | float] = {"access_token": "", "expires_at": 0.0, "cache_key": ""}
 _content_service_token_lock = threading.Lock()
@@ -240,86 +239,6 @@ class ContentService:
         self._clear_access_token()
         return _client.post(endpoint, json=body, headers=self._headers())
 
-    def _get_max_size(self, limit: int) -> int:
-        return limit if limit < MAX_PRODUCT_SEARCH_SIZE else MAX_PRODUCT_SEARCH_SIZE
-
-    def _build_product_search_body(self, product_name: str, limit: int) -> dict:
-        return {
-            "_source": PRODUCT_SEARCH_FIELDS,
-            "sort": [{"_score": {"order": "desc"}}],
-            "size": self._get_max_size(limit),
-            "min_score": 50,
-            "query": {
-                "bool": {
-                    "filter": {"bool": {"must": [{"match": {"@deleted": "false"}}]}},
-                    "must": [
-                        {
-                            "bool": {
-                                "should": [
-                                    {"prefix": {"display_name_th.keyword": {"value": product_name, "boost": 60}}},
-                                    {"wildcard": {"display_name_th.keyword": {"value": f"*{product_name}*", "boost": 50}}},
-                                    {"match": {"display_name_th.n4gram": {"query": product_name, "boost": 5}}},
-                                    {"match": {"display_name_th.n5gram": {"query": product_name, "boost": 5}}},
-                                    {
-                                        "match": {
-                                            "display_name_th.shingle": {
-                                                "query": product_name,
-                                                "fuzziness": "auto",
-                                                "boost": 1,
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "multi_match": {
-                                            "query": product_name,
-                                            "fields": ["display_name_th^2", "display_name_en^2", "keyword"],
-                                            "operator": "and",
-                                            "fuzziness": "AUTO",
-                                            "boost": 50,
-                                        }
-                                    },
-                                    {
-                                        "multi_match": {
-                                            "query": product_name,
-                                            "type": "bool_prefix",
-                                            "fields": [
-                                                "barcode^3",
-                                                "brand",
-                                                "display_name_th^2",
-                                                "display_name_en^2",
-                                                "keyword",
-                                            ],
-                                            "operator": "and",
-                                            "boost": 100,
-                                        }
-                                    },
-                                ]
-                            }
-                        }
-                    ],
-                    "should": [{"semantic": {"field": "concat_display_name", "query": product_name, "boost": 40}}],
-                }
-            },
-        }
-
-    def _build_knowledge_search_body(self, query: str, limit: int) -> dict:
-        return {
-            "_source": KNOWLEDGE_SEARCH_FIELDS,
-            "sort": [{"_score": {"order": "desc"}}],
-            "size": self._get_max_size(limit),
-            "query": {
-                "multi_match": {
-                    "query": query,
-                    "fields": [
-                        "keyword^5",
-                        "title^4",
-                        "content"
-                    ],
-                    "operator": "or",
-                }
-            },
-        }
-
     def _parse_response(self, res: httpx.Response, barcode: str) -> dict:
         if res.status_code != 200:
             return {"barcode": barcode, "price": None, "note": f"API error: {res.status_code} => {res.text}"}
@@ -334,22 +253,43 @@ class ContentService:
 
         return {"barcode": barcode, "price": min(prices), "note": ""}
 
-    def get_product_by_name(self, name: str, limit: int) -> httpx.Response:
-        endpoint = f"{self.base_url.rstrip('/')}/api/km/v1/query/home-product"
-        body = self._build_product_search_body(name, limit)
+    def _query_sku_index(self, body: dict) -> dict:
+        endpoint = f"{self.base_url.rstrip('/')}/api/km/v1/query/{SKU_INDEX_NAME}"
         res = self._post(endpoint, body)
-        return res
+        if res.status_code != 200:
+            raise ToolException(f"SKU content API error {res.status_code}: {res.text}")
+        return res.json()
 
-    def get_knowledge_by_name(self, name: str, limit: int) -> httpx.Response:
-        endpoint = f"{self.base_url.rstrip('/')}/api/km/v1/query/af-basic-knowledge"
-        body = self._build_knowledge_search_body(name, limit)
-        logging.getLogger("content_service").info(
-            "Content service knowledge query index=%s query=%s",
-            "af-basic-knowledge",
-            name,
+    def search_sku_products_by_name(self, name: str, limit: int) -> tuple[list[dict], str | None]:
+        text = normalize_search_text(name)
+        if not text:
+            return [], None
+
+        result_limit = min(max(limit, 1), SKU_QUERY_MAX_SIZE)
+        fetch_k = min(max(result_limit * 3, result_limit), SKU_QUERY_MAX_SIZE)
+        filters = [{"term": {"active": True}}]
+        source = {"includes": SKU_SEARCH_FIELDS}
+        semantic_hits = self._query_sku_index(
+            _semantic_sku_query(text, source, fetch_k, filters)
+        ).get("hits", {}).get("hits", [])
+        lexical_hits = self._query_sku_index(
+            _lexical_sku_query(text, source, fetch_k, filters)
+        ).get("hits", {}).get("hits", [])
+        rows = merge_hits_by_weighted_rrf(
+            [(semantic_hits, SKU_SEMANTIC_WEIGHT), (lexical_hits, SKU_LEXICAL_WEIGHT)],
+            result_limit,
+            ("_id",),
         )
-        return self._post(endpoint, body)
+        return [_sku_hit_to_product(row, rank) for rank, row in enumerate(rows, start=1)], None
 
+    def search_sku_products_by_id(self, sku_id: str, limit: int = 1) -> tuple[list[dict], str | None]:
+        text = normalize_search_text(sku_id)
+        if not text:
+            return [], None
+
+        result_limit = min(max(limit, 1), SKU_QUERY_MAX_SIZE)
+        hits = self._query_sku_index(_sku_id_query(text, True, result_limit)).get("hits", {}).get("hits", [])
+        return [_sku_hit_to_detail(hit, rank) for rank, hit in enumerate(hits, start=1)], None
 
 def normalize_product_name(name: str) -> str:
     """
@@ -359,6 +299,124 @@ def normalize_product_name(name: str) -> str:
     return re.sub(r"\s+", " ", name.strip().lower())
 
 
+def normalize_search_text(text: str) -> str:
+    return re.sub(r"\s+", " ", text or "").strip()[:2000]
+
+
+def extract_strong_tokens(text: str) -> list[str]:
+    tokens: list[str] = []
+    seen: set[str] = set()
+    for candidate in re.findall(r"\b(?=[A-Za-z0-9./_-]*\d)[A-Za-z0-9][A-Za-z0-9./_-]{2,}\b", text):
+        token = candidate.strip(".,;:()[]{}")
+        if len(token) < 4 or token.lower() in seen:
+            continue
+        seen.add(token.lower())
+        tokens.append(token)
+        if len(tokens) == 8:
+            break
+    return tokens
+
+
+def _semantic_sku_query(
+    text: str,
+    source: bool | list[str] | dict[str, Any],
+    size: int,
+    filters: list[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    clause = {"semantic": {"field": "embed_description", "query": text}}
+    query = {"bool": {"must": [clause], "filter": filters}} if filters else clause
+    return {"size": size, "_source": source, "query": query}
+
+
+def _lexical_sku_query(
+    text: str,
+    source: bool | list[str] | dict[str, Any],
+    size: int,
+    filters: list[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    bool_query: dict[str, Any] = {"should": _sku_clauses(text), "minimum_should_match": 1}
+    if filters:
+        bool_query["filter"] = filters
+    return {"size": size, "_source": source, "query": {"bool": bool_query}}
+
+
+def _sku_clauses(text: str) -> list[dict[str, Any]]:
+    clauses = []
+    if text.isdigit():
+        clauses += [
+            {"term": {"_id": {"value": text, "boost": 20}}},
+            {"term": {"id": {"value": text, "boost": 16}}},
+        ]
+    for token in extract_strong_tokens(text):
+        clauses += [
+            {"match_phrase": {"code": {"query": token, "boost": 12}}},
+            {"match_phrase": {"search_keyword": {"query": token, "boost": 10}}},
+        ]
+    return clauses + [
+        {"match_phrase": {"code": {"query": text, "boost": 8}}},
+        {"match_phrase": {"search_keyword": {"query": text, "boost": 7}}},
+        {"match_phrase": {"name": {"query": text, "boost": 5}}},
+        {"match_phrase": {"description": {"query": text, "boost": 5}}},
+        {"match": {"code": {"query": text, "boost": 5}}},
+        {"match": {"search_keyword": {"query": text, "boost": 4}}},
+        {"match": {"name": {"query": text, "boost": 3}}},
+        {"match": {"description": {"query": text, "boost": 2}}},
+        {"match": {"DESCRIPTION": {"query": text, "boost": 2}}},
+        {"match": {"ITEMTEXT": {"query": text, "boost": 2}}},
+    ]
+
+
+def _sku_id_query(
+    sku_id: str,
+    source: bool | list[str] | dict[str, Any],
+    size: int,
+) -> dict[str, Any]:
+    return {
+        "size": size,
+        "_source": source,
+        "query": {
+            "bool": {
+                "filter": [{"term": {"active": True}}],
+                "should": [
+                    {"term": {"_id": {"value": sku_id, "boost": 20}}},
+                    {"term": {"id": {"value": sku_id, "boost": 16}}},
+                    {"term": {"product_sku_id": {"value": sku_id, "boost": 16}}},
+                    {"term": {"code": {"value": sku_id, "boost": 12}}},
+                ],
+                "minimum_should_match": 1,
+            }
+        },
+    }
+
+
+def merge_hits_by_weighted_rrf(
+    hit_groups: list[tuple[list[dict[str, Any]], float]],
+    top_k: int,
+    id_path: tuple[str, ...],
+) -> list[dict[str, Any]]:
+    scores: dict[str, float] = {}
+    best_hits: dict[str, dict[str, Any]] = {}
+    for hits, weight in hit_groups:
+        for rank, hit in enumerate(hits, start=1):
+            item_id = _nested_value(hit, id_path)
+            if item_id in (None, ""):
+                continue
+            key = str(item_id)
+            scores[key] = scores.get(key, 0.0) + weight / (RRF_K + rank)
+            best_hits.setdefault(key, hit)
+    ordered_keys = sorted(scores, key=lambda key: scores[key], reverse=True)
+    return [{"id": key, "score": scores[key], "hit": best_hits[key]} for key in ordered_keys[:top_k]]
+
+
+def _nested_value(payload: dict[str, Any], path: tuple[str, ...]) -> Any:
+    current: Any = payload
+    for key in path:
+        if not isinstance(current, dict):
+            return None
+        current = current.get(key)
+    return current
+
+
 def normalize_markdown(text: str) -> str:
     """
     Replaces multiple consecutive newlines and carriage returns with a single newline.
@@ -366,24 +424,44 @@ def normalize_markdown(text: str) -> str:
     return re.sub(r"(\r\n|\n)+", "\n", text)
 
 
-def _product_hit_to_dict(hit: dict) -> dict:
-    source = hit.get("_source", {})
-    product = dict(source)
-    short_description = product.get("short_description")
-    if isinstance(short_description, dict):
-        product["short_description"] = short_description.get("text")
+def _sku_hit_to_product(row: dict[str, Any], rank: int) -> dict[str, Any]:
+    hit = row.get("hit", {})
+    source = hit.get("_source", {}) if isinstance(hit, dict) else {}
+    sku_id = str(source.get("product_sku_id") or source.get("id") or row.get("id") or "").strip()
+    name = _text_value(source.get("name")) or _text_value(source.get("description")) or sku_id
+    product = {
+        "display_name_th": name,
+        "description": _text_value(source.get("description")),
+        "code": source.get("code"),
+        "search_keyword": source.get("search_keyword"),
+        "active": source.get("active"),
+        "metadata": {
+            "score": row.get("score"),
+            "search_rank": rank,
+            "product_sku_id": sku_id,
+            "code": source.get("code"),
+        },
+    }
+    return product
 
-    metadata = dict(product.get("metadata") or {})
+
+def _sku_hit_to_detail(hit: dict[str, Any], rank: int) -> dict[str, Any]:
+    source = dict(hit.get("_source", {}) or {})
+    sku_id = str(source.get("product_sku_id") or source.get("id") or hit.get("_id") or "").strip()
+    metadata = dict(source.get("metadata") or {})
     metadata.update(
         {
             "score": hit.get("_score"),
-            "barcode": product.get("barcode"),
-            "mat_no": product.get("mat_no"),
-            "sap_id": product.get("sap_id"),
+            "search_rank": rank,
+            "product_sku_id": sku_id,
+            "code": source.get("code"),
         }
     )
-    product["metadata"] = metadata
-    return product
+    source["metadata"] = metadata
+    product_faq = extract_product_faq(source)
+    if product_faq:
+        source["product_faq"] = product_faq
+    return source
 
 
 def _text_value(value) -> str:
@@ -392,40 +470,55 @@ def _text_value(value) -> str:
     return str(value or "")
 
 
-def _knowledge_hit_to_dict(hit: dict) -> dict:
-    source = hit.get("_source", {})
-    return {
-        "id": source.get("id"),
-        "title": _text_value(source.get("title")),
-        "content": _text_value(source.get("content")),
-        "published": source.get("published"),
-        "keywords": source.get("keywords"),
-        "metadata": {"score": hit.get("_score")},
-    }
+def extract_product_faq(source: dict[str, Any]) -> list[dict[str, str]]:
+    faqs: list[dict[str, str]] = []
+    seen: set[tuple[str, str]] = set()
 
+    def add(question: Any, answer: Any) -> None:
+        question_text = _text_value(question).strip()
+        answer_text = _text_value(answer).strip()
+        if not question_text and not answer_text:
+            return
+        key = (question_text.lower(), answer_text.lower())
+        if key in seen:
+            return
+        seen.add(key)
+        faqs.append({"question": question_text, "answer": answer_text})
 
-def parse_product_response(data: dict) -> tuple[list[dict], str | None]:
-    if data.get("success") is True:
-        return data.get("data") or [], None
+    def key_name(value: Any) -> str:
+        return str(value or "").strip().lower().replace("-", "_").replace(" ", "_")
 
-    hits = data.get("hits")
-    if isinstance(hits, dict):
-        raw_hits = hits.get("hits") or []
-        return [_product_hit_to_dict(hit) for hit in raw_hits], None
+    def normalize_candidate(value: Any) -> None:
+        if isinstance(value, list):
+            for item in value:
+                normalize_candidate(item)
+            return
+        if isinstance(value, dict):
+            question = next((value.get(key) for key in value if key_name(key) in FAQ_QUESTION_KEYS), "")
+            answer = next((value.get(key) for key in value if key_name(key) in FAQ_ANSWER_KEYS), "")
+            if question or answer:
+                add(question, answer)
+                return
+            for item in value.values():
+                normalize_candidate(item)
+            return
+        if isinstance(value, str):
+            add("", value)
 
-    return [], f"API unsuccessful: {data}"
+    def walk(value: Any) -> None:
+        if isinstance(value, dict):
+            for key, item in value.items():
+                normalized_key = key_name(key)
+                if normalized_key in FAQ_CONTAINER_KEYS or "faq" in normalized_key:
+                    normalize_candidate(item)
+                elif isinstance(item, (dict, list)):
+                    walk(item)
+        elif isinstance(value, list):
+            for item in value:
+                walk(item)
 
-
-def parse_knowledge_response(data: dict) -> tuple[list[dict], str | None]:
-    if data.get("success") is True:
-        return data.get("data") or [], None
-
-    hits = data.get("hits")
-    if isinstance(hits, dict):
-        raw_hits = hits.get("hits") or []
-        return [_knowledge_hit_to_dict(hit) for hit in raw_hits], None
-
-    return [], f"API unsuccessful: {data}"
+    walk(source)
+    return faqs[:20]
 
 
 def tool_exception_react(err: str, tool_call_id: str) -> Command:
