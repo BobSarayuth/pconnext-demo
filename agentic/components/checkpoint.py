@@ -28,7 +28,7 @@ from langgraph.checkpoint.serde.jsonplus import JsonPlusSerializer
 from redis.asyncio import Redis as AsyncRedis
 
 REDIS_KEY_SEPARATOR = "$"
-AGENTIC_CACHE_TTL = int(os.getenv("AGENTIC_CACHE_TTL", "0"))  # default TTL is 0 second
+AGENTIC_CACHE_TTL = int(os.getenv("AGENTIC_CACHE_TTL", "86400"))  # default TTL is 1 day
 # Utilities shared by both RedisSaver and AsyncRedisSaver
 
 

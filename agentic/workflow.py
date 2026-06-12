@@ -3,10 +3,11 @@ import logging
 from typing import Optional, Union
 
 from langchain.chat_models.base import BaseChatModel
-from langchain_core.messages import AIMessage, AnyMessage, HumanMessage, SystemMessage
+from langchain_core.messages import AIMessage, AnyMessage, HumanMessage, RemoveMessage, SystemMessage
 from langchain_core.runnables import RunnableLambda
 from langchain_core.runnables.config import RunnableConfig
 from langgraph.graph import END, START, MessagesState, StateGraph
+from langgraph.graph.message import REMOVE_ALL_MESSAGES
 from langgraph.graph.state import CompiledStateGraph
 from langgraph.managed import IsLastStep, RemainingSteps
 from langgraph.prebuilt import create_react_agent
@@ -58,8 +59,11 @@ def find_messages_type(state: AgentState, message_type: str) -> AnyMessage:
 
 
 def is_reset_request(state: AgentState) -> bool:
-    human_message = find_messages_type(state, "human")
-    return isinstance(human_message.content, str) and human_message.content.strip().lower() == "reset"
+    messages = state.get("messages") or []
+    if not messages:
+        return False
+    last_message = messages[-1]
+    return last_message.type == "human" and isinstance(last_message.content, str) and last_message.content.strip().lower() == "reset"
 
 
 def _truncate_tool_log(value, max_chars: int = MAX_TOOL_LOG_CHARS) -> str:
@@ -526,12 +530,16 @@ async def setup_workflow():
         thread_id = config.get("configurable", {}).get("thread_id")
         deleted = await checkpointer.adel_tuple(thread_id) if thread_id else 0
         logger.info("chat history reset thread_id=%s deleted_keys=%s", thread_id, deleted)
-        state["messages"] = [AIMessage(content="เริ่มต้นการสนทนาใหม่เรียบร้อยแล้วครับ")]
-        state["language"] = "Thai"
-        state["ask_count"] = 0
-        state["has_error"] = False
-        state["prompt_config"] = get_prompt_config(config)
-        return state
+        return {
+            "messages": [
+                RemoveMessage(id=REMOVE_ALL_MESSAGES),
+                AIMessage(content="เริ่มต้นการสนทนาใหม่เรียบร้อยแล้วครับ"),
+            ],
+            "language": "Thai",
+            "ask_count": 0,
+            "has_error": False,
+            "prompt_config": get_prompt_config(config),
+        }
 
     def route_start(state):
         return "reset" if is_reset_request(state) else "agent"

@@ -121,35 +121,22 @@ def _extract_chat_completion_text(payload: dict[str, Any]) -> str:
 
 
 def _audio_payload_candidates(model_name: str, audio_data: str, audio_format: str, mime_type: str) -> list[dict[str, Any]]:
-    prompt = "Transcribe this Thai or English audio exactly. Return only the spoken text. Do not answer the user."
-    data_url = f"data:{mime_type};base64,{audio_data}"
+    prompt = "Provide a transcription of this audio by ignoring the noise..."
+    data_url = f"data:audio/mp3;base64,{audio_data}"
+    model = _litellm_model_name(model_name)
     return [
         {
-            "model": _litellm_model_name(model_name),
+            "model": model,
             "messages": [
                 {
                     "role": "user",
                     "content": [
                         {"type": "text", "text": prompt},
-                        {"type": "input_audio", "input_audio": {"data": audio_data, "format": audio_format}},
+                        {"type": "image_url", "image_url": data_url},
                     ],
                 }
             ],
-            "temperature": 0,
-        },
-        {
-            "model": _litellm_model_name(model_name),
-            "messages": [
-                {
-                    "role": "user",
-                    "content": [
-                        {"type": "text", "text": prompt},
-                        {"type": "file", "file": {"file_data": data_url, "filename": f"audio.{audio_format}"}},
-                    ],
-                }
-            ],
-            "temperature": 0,
-        },
+        }
     ]
 
 
