@@ -11,7 +11,7 @@ Categories:
 - `follow_up`  response indicating that the system is asking the user for additional details or clarification in order to proceed or provide a more accurate answer.
 - `confirm_option` A response that prompts the user to confirm a question or request assistance from an operator.
 - `contact_operator`  A response that prompts the user to request assistance from an operator or informs them that their request will be forwarded to one.
-- `option_pickup` A response that shows a list of predefined options and asks the user to pick one — helping guide them to a specific answer, such as a list of products or solution services.
+- `option_pickup` A response that shows a list of predefined options and asks the user to pick one — helping guide them to a specific answer, such as a list of products.
 - `general` This response that don’t fit into any of the above categories. This is a general category for normal conversation, questions, or responses unrelated to searching or barcodes.
 
 # situation Guidelines

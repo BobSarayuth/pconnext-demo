@@ -31,6 +31,7 @@ from chatapi.workflow.transform import deserialize_stream
 
 router = APIRouter(prefix="/api/chat", dependencies=[Depends(api_key_authentication)])
 logger = logging.getLogger("fastapi.chat")
+MAX_LOG_TEXT = 500
 
 
 class ListReason(BaseModel):
@@ -63,6 +64,47 @@ def _normalize_payload_config(payload: PredictionRequest) -> None:
         payload.config.setdefault("username", payload.username)
     if payload.userAgent:
         payload.config.setdefault("userAgent", payload.userAgent)
+
+
+def _trim_log_value(value: str | None, max_len: int = MAX_LOG_TEXT) -> str:
+    text = str(value or "")
+    if len(text) <= max_len:
+        return text
+    return f"{text[:max_len]}...<truncated {len(text) - max_len} chars>"
+
+
+def _attachment_log_summary(payload: PredictionRequest) -> list[dict]:
+    summary = []
+    for attachment in payload.attachments or []:
+        if isinstance(attachment, str):
+            summary.append({"type": "", "url_count": 1, "urls": [_trim_log_value(attachment, 120)]})
+            continue
+
+        urls = attachment.url if isinstance(attachment.url, list) else [attachment.url]
+        summary.append(
+            {
+                "type": attachment.type or "",
+                "url_count": len(urls),
+                "urls": [_trim_log_value(url, 120) for url in urls[:3]],
+            }
+        )
+    return summary
+
+
+def _log_prediction_received(payload: PredictionRequest) -> None:
+    config = payload.config if isinstance(payload.config, dict) else {}
+    logger.info(
+        {
+            "event": "prediction_request_received",
+            "sessionId": payload.sessionId,
+            "username": config.get("username") or payload.username or "",
+            "userAgent": config.get("userAgent") or payload.userAgent or "",
+            "streaming": payload.streaming,
+            "question": _trim_log_value(payload.question),
+            "attachments": _attachment_log_summary(payload),
+        },
+        extra={"session_id": payload.sessionId},
+    )
 
 
 async def event_stream(db: Session, req: Request, payload: PredictionRequest) -> AsyncGenerator[str, None]:
@@ -120,6 +162,11 @@ async def event_stream(db: Session, req: Request, payload: PredictionRequest) ->
                 },
             ).model_dump_json()
 
+        logger.info(
+            {"event": "prediction_stream_success", "sessionId": payload.sessionId},
+            extra={"session_id": payload.sessionId},
+        )
+
     except Exception as e:
         logger.error(e, extra={"session_id": payload.sessionId})
         yield ChunkPredictionResponse(mode="error", chunk={"message": str(e)}).model_dump_json()
@@ -156,6 +203,16 @@ async def event_no_stream(db: Session, payload: PredictionRequest) -> Prediction
             result.agentReasoning = (
                 ([AgentReasoning(**reason) for reason in agent_reasoning]) if payload.reasoning else []  # type: ignore
             )
+    logger.info(
+        {
+            "event": "prediction_success",
+            "sessionId": payload.sessionId,
+            "chatId": result.chatId,
+            "elapsed": result.elapsed,
+            "text": _trim_log_value(result.text),
+        },
+        extra={"session_id": payload.sessionId},
+    )
     return result
 
 
@@ -186,13 +243,23 @@ async def prediction(
             user_agent = payload.config.get("userAgent", req.headers.get("user-agent", ""))
             payload.config.setdefault("userAgent", user_agent)
 
+        _log_prediction_received(payload)
+
         if payload.streaming:
             return EventSourceResponse(event_stream(db, req, payload), sep="\n")
         else:
             return await event_no_stream(db, payload)
 
     except Exception as e:
-        logger.error(e, extra={"session_id": payload.sessionId})
+        logger.error(
+            {
+                "event": "prediction_failed",
+                "sessionId": payload.sessionId,
+                "error": str(e),
+            },
+            extra={"session_id": payload.sessionId},
+            exc_info=True,
+        )
         raise HTTPException(status_code=500, detail=str(e)) from e
 
 

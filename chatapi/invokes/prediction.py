@@ -5,6 +5,7 @@ import re
 from collections.abc import AsyncGenerator, AsyncIterator
 from typing import Any
 
+import httpx
 from agentic import get_graph, is_setup
 from agentic.components.provider import llm_provider
 from fastapi.exceptions import HTTPException
@@ -31,6 +32,19 @@ stream_mode: list[StreamMode] = ["messages", "updates"]
 
 logger = logging.getLogger("fastapi.prediction")
 DEFAULT_AUDIO_MODEL = os.getenv("AGENTIC_AUDIO_MODEL", os.getenv("AGENTIC_AGENT_MODEL", "openai:gpt-4o-mini"))
+MAX_LOG_TEXT = 500
+_audio_client = httpx.Client(
+    verify=False,  # noqa: S501
+    timeout=httpx.Timeout(60.0),
+    limits=httpx.Limits(max_keepalive_connections=2, max_connections=5),
+)
+
+
+def _trim_log_value(value: str | None, max_len: int = MAX_LOG_TEXT) -> str:
+    text = str(value or "")
+    if len(text) <= max_len:
+        return text
+    return f"{text[:max_len]}...<truncated {len(text) - max_len} chars>"
 
 
 def _normalize_attachment_type(value: str | None) -> str:
@@ -73,7 +87,115 @@ def _audio_format(content_type: str, url: str) -> str:
     return extension or "mp3"
 
 
+def _audio_mime_type(content_type: str, url: str) -> str:
+    normalized = _normalize_attachment_type(content_type).split(";")[0]
+    if normalized.startswith("audio/"):
+        return normalized
+    audio_format = _audio_format(content_type, url)
+    if audio_format == "mp3":
+        return "audio/mpeg"
+    if audio_format == "wav":
+        return "audio/wav"
+    if audio_format in ("m4a", "mp4"):
+        return "audio/mp4"
+    return f"audio/{audio_format}"
+
+
+def _litellm_model_name(model_name: str) -> str:
+    normalized = model_name
+    prefixes = ("litellm/", "azure/")
+    while normalized.startswith(prefixes):
+        normalized = normalized.split("/", maxsplit=1)[1]
+    return normalized
+
+
+def _extract_chat_completion_text(payload: dict[str, Any]) -> str:
+    choices = payload.get("choices") or []
+    if not choices:
+        return ""
+    message = choices[0].get("message") or {}
+    content = message.get("content") or ""
+    if isinstance(content, list):
+        return "".join(str(item.get("text", "")) for item in content if isinstance(item, dict)).strip()
+    return str(content).strip()
+
+
+def _audio_payload_candidates(model_name: str, audio_data: str, audio_format: str, mime_type: str) -> list[dict[str, Any]]:
+    prompt = "Transcribe this Thai or English audio exactly. Return only the spoken text. Do not answer the user."
+    data_url = f"data:{mime_type};base64,{audio_data}"
+    return [
+        {
+            "model": _litellm_model_name(model_name),
+            "messages": [
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": prompt},
+                        {"type": "input_audio", "input_audio": {"data": audio_data, "format": audio_format}},
+                    ],
+                }
+            ],
+            "temperature": 0,
+        },
+        {
+            "model": _litellm_model_name(model_name),
+            "messages": [
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": prompt},
+                        {"type": "file", "file": {"file_data": data_url, "filename": f"audio.{audio_format}"}},
+                    ],
+                }
+            ],
+            "temperature": 0,
+        },
+    ]
+
+
+def _transcribe_audio_via_litellm_proxy(file: FileAttachment, url: str, model_name: str) -> str:
+    base_url = os.getenv("LITELLM_BASE_URL", "").rstrip("/")
+    api_key = os.getenv("LITELLM_API_KEY", "")
+    if not base_url or not api_key:
+        raise RuntimeError("Missing LITELLM_BASE_URL or LITELLM_API_KEY for audio transcription")
+
+    audio_data = base64.b64encode(file.blob).decode("utf-8")
+    audio_format = _audio_format(file.content_type, url)
+    mime_type = _audio_mime_type(file.content_type, url)
+    endpoint = f"{base_url}/chat/completions"
+    headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
+    last_error = ""
+
+    for body in _audio_payload_candidates(model_name, audio_data, audio_format, mime_type):
+        content_types = [
+            item.get("type")
+            for item in body["messages"][0]["content"]
+            if isinstance(item, dict) and item.get("type") != "text"
+        ]
+        res = _audio_client.post(endpoint, headers=headers, json=body)
+        logger.info(
+            {
+                "event": "audio_transcription_model_call",
+                "model": body["model"],
+                "status_code": res.status_code,
+                "content_types": content_types,
+            }
+        )
+        if 200 <= res.status_code < 300:
+            transcript = _extract_chat_completion_text(res.json())
+            if transcript:
+                return transcript
+            last_error = "empty transcription response"
+            continue
+        last_error = res.text[:1000]
+
+    raise RuntimeError(f"Audio transcription failed via agent model: {last_error}")
+
+
 def _transcribe_audio(file: FileAttachment, url: str) -> str:
+    if DEFAULT_AUDIO_MODEL.startswith("litellm/"):
+        return _transcribe_audio_via_litellm_proxy(file, url, DEFAULT_AUDIO_MODEL)
+
     audio_model = llm_provider(DEFAULT_AUDIO_MODEL, False, {"temperature": 0, "top_p": 0.7})
     audio_data = base64.b64encode(file.blob).decode("utf-8")
     message = HumanMessage(
@@ -160,7 +282,17 @@ def _process_attachments(
         else:
             file = FileAttachment(url=endpoint)
 
-        if file.content_type.startswith("image/"):
+        logger.info(
+            {
+                "event": "attachment_loaded",
+                "declared_type": declared_type,
+                "content_type": file.content_type,
+                "url": _trim_log_value(endpoint, 120),
+            },
+            extra={"session_id": payload.sessionId},
+        )
+
+        if file.content_type.startswith("image/") or _is_declared_image(declared_type):
             if declared_type and not _is_declared_image(declared_type):
                 raise HTTPException(status_code=400, detail=f"Attachment type mismatch: {declared_type} is not image")
             _identify_append(content_type, RespondedType.IMAGE)
@@ -174,6 +306,14 @@ def _process_attachments(
                 ).model_dump(),
             )
             image_attachments.append(img.to_dict())
+            logger.info(
+                {
+                    "event": "image_attachment_processed",
+                    "content_type": file.content_type,
+                    "url": _trim_log_value(endpoint, 120),
+                },
+                extra={"session_id": payload.sessionId},
+            )
         elif _is_audio_content_type(file.content_type) or _is_declared_audio(declared_type):
             _identify_append(content_type, RespondedType.TEXT)
             transcript = _transcribe_audio(file, endpoint)
@@ -188,6 +328,15 @@ def _process_attachments(
                 ).model_dump(),
             )
             audio_transcripts.append(transcript)
+            logger.info(
+                {
+                    "event": "audio_attachment_transcribed",
+                    "content_type": file.content_type,
+                    "url": _trim_log_value(endpoint, 120),
+                    "transcript": _trim_log_value(transcript),
+                },
+                extra={"session_id": payload.sessionId},
+            )
         else:
             raise HTTPException(status_code=400, detail=f"Invalid content_type: {file.content_type!s}")
 
@@ -332,8 +481,10 @@ def _prepare_prediction_context(
 
     logger.info(
         {
+            "event": "prediction_context_prepared",
             "question": payload.question,
             "attachments": files_count,
+            "content_type": [str(item) for item in content_type],
             "streaming": payload.streaming,
             "reasoning": payload.reasoning,
         },

@@ -33,7 +33,7 @@ services:
       - AGENTIC_DB_POOL_SIZE=100
       - AGENTIC_DB_URI=postgresql://postgres:password@af-db-postgres:5432/postgres
       - AGENTIC_CACHE_URI=redis://:password@af-db-redis:6379/1
-      - AGENTIC_IMAGE_WISHLIST=scg.teemchat.net,localhost
+      - AGENTIC_IMAGE_WISHLIST=scg.teemchat.net,localhost,i.ibb.co,api-data.line.me,*.line-scdn.net,do-common-consolidate-chat-dev.s3.ap-southeast-1.amazonaws.com
       - CAP_CONTENT_SERVICE_URL=https://cap-gateway-dev.scg-wedo.tech
       - CAP_CONTENT_TOKEN_URL=https://cap-gateway-dev.scg-wedo.tech/api/oauth2/token
       - CAP_CONTENT_CLIENT_ID=${CAP_CONTENT_CLIENT_ID:-client-id}
@@ -42,6 +42,7 @@ services:
       - CAP_CONTENT_KNOWLEDGE_INDEX=${CAP_CONTENT_KNOWLEDGE_INDEX:-home-content-article}
 
       - AGENTIC_AGENT_MODEL=${AGENTIC_AGENT_MODEL}
+      - AGENTIC_AUDIO_MODEL=${AGENTIC_AUDIO_MODEL}
       - AGENTIC_SAFEGUARD_MODEL=${AGENTIC_SAFEGUARD_MODEL}
       - AGENTIC_INSPECT_MODEL=${AGENTIC_INSPECT_MODEL}
       - LITELLM_BASE_URL=https://do-cap-litellm-dev.scg-wedo.tech

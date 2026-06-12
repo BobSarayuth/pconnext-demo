@@ -41,6 +41,77 @@ _client = httpx.Client(
 )
 
 
+def _trim_log_value(value: str | None, max_len: int = 160) -> str:
+    text = str(value or "")
+    if len(text) <= max_len:
+        return text
+    return f"{text[:max_len]}...<truncated {len(text) - max_len} chars>"
+
+
+def _domain_allowed(hostname: str, allowed_domains: list[str]) -> bool:
+    for domain in allowed_domains:
+        if hostname == domain:
+            return True
+        if domain.startswith("*.") and hostname.endswith(domain[1:]):
+            return True
+        if domain.startswith(".") and hostname.endswith(domain):
+            return True
+    return False
+
+
+def _content_type_from_extension(url: str) -> str:
+    path = url.split("?", maxsplit=1)[0]
+    file_ext = path.rsplit(".", maxsplit=1)[-1].lower() if "." in path else ""
+    if file_ext in ["jpg", "jpeg"]:
+        return "image/jpeg"
+    if file_ext in ["png"]:
+        return "image/png"
+    if file_ext in ["webp"]:
+        return "image/webp"
+    if file_ext in ["gif"]:
+        return "image/gif"
+    if file_ext in ["mp3"]:
+        return "audio/mpeg"
+    if file_ext in ["m4a", "mp4"]:
+        return "audio/mp4"
+    if file_ext in ["wav"]:
+        return "audio/wav"
+    if file_ext in ["webm"]:
+        return "audio/webm"
+    if file_ext in ["ogg", "oga"]:
+        return "audio/ogg"
+    if file_ext in ["aac"]:
+        return "audio/aac"
+    return ""
+
+
+def _content_type_from_magic(blob: bytes) -> str:
+    if blob.startswith(b"\xff\xd8\xff"):
+        return "image/jpeg"
+    if blob.startswith(b"\x89PNG\r\n\x1a\n"):
+        return "image/png"
+    if blob.startswith(b"GIF87a") or blob.startswith(b"GIF89a"):
+        return "image/gif"
+    if len(blob) >= 12 and blob[:4] == b"RIFF" and blob[8:12] == b"WEBP":
+        return "image/webp"
+    if len(blob) >= 12 and blob[:4] == b"RIFF" and blob[8:12] == b"WAVE":
+        return "audio/wav"
+    if blob.startswith(b"ID3") or blob.startswith(b"\xff\xfb"):
+        return "audio/mpeg"
+    return ""
+
+
+def _normalize_download_content_type(content_type: str, url: str, blob: bytes | None = None) -> str:
+    normalized = content_type.split(";", maxsplit=1)[0].strip().lower()
+    if normalized and normalized not in ["binary/octet-stream", "application/octet-stream", "application/xml", "text/xml"]:
+        return normalized
+    if blob:
+        detected = _content_type_from_magic(blob)
+        if detected:
+            return detected
+    return _content_type_from_extension(url) or normalized
+
+
 class FileAttachment:
     def __init__(self, url: str = "", blob: bytes | bytearray | None = None, content_type: str = "") -> None:
         self.content_type: str = content_type
@@ -61,44 +132,67 @@ class FileAttachment:
         # Validate the URL
         uri = urlparse(url)
         logger.info(url[:50] + "..." if len(url) > 50 else url)
-        allow_domain = uri.hostname in [domain.strip() for domain in policy.IMAGE_WISHLIST.split(",")]
+        allowed_domains = [domain.strip().lower() for domain in policy.IMAGE_WISHLIST.split(",") if domain.strip()]
+        hostname = (uri.hostname or "").lower()
+        allow_domain = _domain_allowed(hostname, allowed_domains)
         allow_schema = uri.scheme in policy.IMAGE_SCHEMA_WISHLIST
 
-        if not (allow_domain or allow_schema):
-            raise HTTPException(status_code=400, detail="Unsafe URL")
+        if uri.scheme == LOCAL_BLOB.rstrip("://"):
+            logger.warning(
+                {
+                    "event": "attachment_url_rejected",
+                    "reason": "local_blob_without_db",
+                    "url": _trim_log_value(url),
+                }
+            )
+            raise HTTPException(status_code=400, detail="Local blob attachment requires database context")
+
+        if not allow_schema:
+            logger.warning(
+                {
+                    "event": "attachment_url_rejected",
+                    "reason": "unsafe_scheme",
+                    "scheme": uri.scheme or "missing",
+                    "url": _trim_log_value(url),
+                }
+            )
+            raise HTTPException(status_code=400, detail=f"Unsafe URL scheme: {uri.scheme or 'missing'}")
+
+        if not allow_domain:
+            logger.warning(
+                {
+                    "event": "attachment_url_rejected",
+                    "reason": "unsafe_domain",
+                    "domain": hostname or "missing",
+                    "url": _trim_log_value(url),
+                }
+            )
+            raise HTTPException(status_code=400, detail=f"Unsafe URL domain: {hostname or 'missing'}")
+        logger.info(
+            {
+                "event": "attachment_url_allowed",
+                "domain": hostname,
+                "scheme": uri.scheme,
+                "url": _trim_log_value(url),
+            }
+        )
         del uri
 
         # First, check content type with HEAD request
         try:
             head_res = _client.head(url)
-            print(f" --- {head_res.headers}")
-            self.content_type = head_res.headers.get("Content-Type", "")
-            logger.info(f" - Content type: {self.content_type}")
-
-            # Handle binary/octet-stream by checking file extension
-            if self.content_type == "binary/octet-stream" or not self.content_type:
-                file_ext = url.lower().split(".")[-1] if "." in url else ""
-                if file_ext in ["jpg", "jpeg"]:
-                    self.content_type = "image/jpeg"
-                elif file_ext in ["png"]:
-                    self.content_type = "image/png"
-                elif file_ext in ["webp"]:
-                    self.content_type = "image/webp"
-                elif file_ext in ["gif"]:
-                    self.content_type = "image/gif"
-                elif file_ext in ["mp3"]:
-                    self.content_type = "audio/mpeg"
-                elif file_ext in ["m4a", "mp4"]:
-                    self.content_type = "audio/mp4"
-                elif file_ext in ["wav"]:
-                    self.content_type = "audio/wav"
-                elif file_ext in ["webm"]:
-                    self.content_type = "audio/webm"
-                elif file_ext in ["ogg", "oga"]:
-                    self.content_type = "audio/ogg"
-                elif file_ext in ["aac"]:
-                    self.content_type = "audio/aac"
-                logger.info(f" - Adjusted content type from extension: {self.content_type}")
+            head_content_type = head_res.headers.get("Content-Type", "")
+            if 200 <= head_res.status_code < 300:
+                self.content_type = _normalize_download_content_type(head_content_type, url)
+            logger.info(
+                {
+                    "event": "attachment_head_checked",
+                    "status_code": head_res.status_code,
+                    "content_type": head_content_type,
+                    "normalized_content_type": self.content_type,
+                    "url": _trim_log_value(url),
+                }
+            )
         except Exception as e:
             logger.error(f" - Error checking content type: {e!s}")
             raise HTTPException(status_code=400, detail=f"Error accessing URL: {e!s}") from e
@@ -106,7 +200,16 @@ class FileAttachment:
         # Then download the file
         res = _client.get(url)
         elapsed.stop()
-        logger.info(f" - Download completed: {float(elapsed)}s")
+        get_content_type = res.headers.get("Content-Type", "")
+        logger.info(
+            {
+                "event": "attachment_get_completed",
+                "status_code": res.status_code,
+                "content_type": get_content_type,
+                "elapsed": float(elapsed),
+                "url": _trim_log_value(url),
+            }
+        )
 
         if res.status_code != 200:
             raise HTTPException(status_code=404, detail="File not found at the provided URL")
@@ -115,6 +218,15 @@ class FileAttachment:
             raise HTTPException(status_code=413, detail="File too large (max 20MB)")
 
         self.blob = res.content
+        self.content_type = _normalize_download_content_type(get_content_type or self.content_type, url, self.blob)
+        logger.info(
+            {
+                "event": "attachment_content_type_resolved",
+                "content_type": self.content_type,
+                "size": len(self.blob),
+                "url": _trim_log_value(url),
+            }
+        )
 
     def to_image(self) -> "ImageMessage":
         """Convert this FileAttachment to an ImageMessage"""
@@ -138,7 +250,13 @@ class ImageMessage(FileAttachment):
             )
 
         # Process the image
-        self.blob = self.convert(self.blob, policy.IMAGE_RESOLUTION_MAX)
+        try:
+            self.blob = self.convert(self.blob, policy.IMAGE_RESOLUTION_MAX)
+        except Exception as e:
+            raise HTTPException(
+                status_code=400,
+                detail="Attachment is not a valid image or the URL returned a non-image response.",
+            ) from e
 
     def is_valid(self) -> bool:
         """Check if the file is a valid image based on content type"""
